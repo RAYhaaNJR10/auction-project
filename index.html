@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Football Auction</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SPIN PAGE -->
+<div id="wheelSection">
+  <h1 id="title">Football Player Auction</h1>
+
+  <div class="wheel-container">
+    <canvas id="wheel" width="500" height="500"></canvas>
+    <div class="pointer">▼</div>
+  </div>
+
+  <button id="spinBtn">SPIN</button>
+</div>
+
+<!-- REVEAL PAGE -->
+<div id="revealScreen">
+
+  <video id="playerVideo" autoplay muted></video>
+
+  <img id="playerCard">
+
+  <div id="statusText"></div>
+
+  <div id="decisionButtons">
+    <button id="unsoldBtn">UNSOLD</button>
+    <button id="soldBtn">SOLD</button>
+  </div>
+
+</div>
+
+<!-- FINAL SCREEN -->
+<div id="finalScreen"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+body {
+  margin: 0;
+  background: black;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+/* =========================
+   SPIN PAGE
+   ========================= */
+
+#wheelSection {
+  height: 100vh;
+  width: 100vw;
+
+  background-image: url("assets/kurrah.jpeg");
+  background-size: cover;
+  background-position: top center; /* ✅ UPPER PART */
+  background-repeat: no-repeat;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+}
+
+#wheelSection::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 0;
+}
+
+#wheelSection * {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================
+   WHEEL
+   ========================= */
+
+.wheel-container {
+  position: relative;
+}
+
+.pointer {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 30px;
+}
+
+#spinBtn {
+  margin-top: 20px;
+  font-size: 20px;
+  padding: 12px 30px;
+  cursor: pointer;
+}
+
+/* =========================
+   REVEAL SCREEN
+   ========================= */
+
+#revealScreen {
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 10;
+}
+
+#playerVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+#playerCard {
+  width: 360px;
+  display: none;
+}
+
+/* SOLD / UNSOLD TEXT */
+#statusText {
+  font-size: 48px;
+  font-weight: bold;
+  margin-top: 20px;
+  display: none;
+}
+
+/* BUTTONS */
+#decisionButtons {
+  position: fixed;
+  bottom: 30px;
+  width: 100%;
+  display: none;
+  justify-content: space-between;
+  padding: 0 60px;
+}
+
+#soldBtn {
+  background: green;
+  color: white;
+  font-size: 18px;
+  padding: 12px 28px;
+}
+
+#unsoldBtn {
+  background: crimson;
+  color: white;
+  font-size: 18px;
+  padding: 12px 28px;
+}
+
+/* FINAL */
+#finalScreen {
+  display: none;
+  padding: 40px;
+}

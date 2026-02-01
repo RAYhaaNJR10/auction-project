@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "LMarquinhos",
+    "position": "CB",
+    "rating": 86,
+    "video": "videos/marquinhostempvideo.mp4",
+    "card": "cards/marquinhostestcard.png"
+  },
+  {
+    "id": 2,
+    "name": "Messi",
+    "position": "CF",
+    "rating": 93,
+    "video": "videos/messitempvideo.mp4",
+    "card": "cards/messitestcard.png"
+  }
+]
