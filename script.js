@@ -1,9 +1,19 @@
+/* ================= DOM ================= */
 const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
 
 const wheelSection = document.getElementById("wheelSection");
 const revealScreen = document.getElementById("revealScreen");
 const finalScreen = document.getElementById("finalScreen");
+const finalBanner = document.getElementById("finalBanner");
+
+/* RESUME POPUP */
+const resumeOverlay = document.getElementById("resumeOverlay");
+const resumeYes = document.getElementById("resumeYes");
+const resumeNo = document.getElementById("resumeNo");
+
+/* MASTER VOLUME */
+const volumeSlider = document.getElementById("volumeSlider");
 
 const video = document.getElementById("playerVideo");
 const card = document.getElementById("playerCard");
@@ -15,40 +25,149 @@ const unsoldBtn = document.getElementById("unsoldBtn");
 const decisionButtons = document.getElementById("decisionButtons");
 const undoBtn = document.getElementById("undoBtn");
 
-/* AUDIO */
+/* ================= AUDIO ================= */
 const spinSound = new Audio("sounds/spin.mp3");
 const revealSound = new Audio("sounds/reveal.mp3");
 const cardHitSound = new Audio("sounds/card-hit.mp3");
 const bgMusic = new Audio("sounds/bg-music.mp3");
+const soldSound = new Audio("sounds/sold.mp3");
+const unsoldSound = new Audio("sounds/unsold.mp3");
 
 bgMusic.loop = true;
-bgMusic.volume = 0.45;
 
+/* ================= GLOBAL FLAGS ================= */
+let isVideoPlaying = false;
+
+/* ================= MASTER VOLUME ================= */
+function setMasterVolume(v) {
+  const vol = Math.max(0, Math.min(1, v));
+  bgMusic.volume = vol;
+  spinSound.volume = vol;
+  revealSound.volume = vol;
+  cardHitSound.volume = vol;
+  soldSound.volume = vol;
+  unsoldSound.volume = vol;
+}
+
+volumeSlider.value = 45;
+setMasterVolume(0.45);
+
+volumeSlider.addEventListener("input", () => {
+  // ❗ Do NOT start bg music here
+  setMasterVolume(volumeSlider.value / 100);
+});
+
+/* ================= AUDIO HELPERS ================= */
+function fadeInBgMusic(targetVolume = 0.25, duration = 1500) {
+  if (isVideoPlaying) return; // ❗ HARD BLOCK
+
+  const steps = 30;
+  const stepTime = duration / steps;
+  const volumeStep = targetVolume / steps;
+
+  bgMusic.volume = 0;
+  bgMusic.play().catch(() => {});
+
+  let step = 0;
+  const interval = setInterval(() => {
+    if (isVideoPlaying) {
+      clearInterval(interval);
+      return;
+    }
+    step++;
+    bgMusic.volume = Math.min(step * volumeStep, targetVolume);
+    if (step >= steps) clearInterval(interval);
+  }, stepTime);
+}
+
+function playForDuration(audio, duration = 3000) {
+  audio.currentTime = 0;
+  audio.play().catch(() => {});
+  setTimeout(() => {
+    audio.pause();
+    audio.currentTime = 0;
+  }, duration);
+}
+
+/* ================= AUTO SAVE ================= */
+function saveAuctionState() {
+  localStorage.setItem("auctionState", JSON.stringify({
+    currentPool,
+    unsoldPlayers,
+    historyStack,
+    rotation
+  }));
+}
+
+function loadAuctionState() {
+  const saved = localStorage.getItem("auctionState");
+  if (!saved) return false;
+
+  const state = JSON.parse(saved);
+  currentPool = state.currentPool;
+  unsoldPlayers = state.unsoldPlayers;
+  historyStack.length = 0;
+  historyStack.push(...state.historyStack);
+  rotation = state.rotation || 0;
+
+  undoBtn.style.display = historyStack.length ? "block" : "none";
+  updateFinalBanner();
+  return true;
+}
+
+/* ================= STATE ================= */
 let players = [];
 let currentPool = [];
 let unsoldPlayers = [];
-let selectedPlayer = null;
-let lastDecision = null;
-
 let rotation = 0;
 let spinning = false;
 let highlightIndex = null;
 
-/* LOAD PLAYERS */
+const historyStack = [];
+undoBtn.style.display = "none";
+
+/* ================= FINAL PICKS ================= */
+function updateFinalBanner() {
+  if (!finalBanner) return;
+  finalBanner.style.display = currentPool.length <= 5 ? "block" : "none";
+}
+
+/* ================= LOAD PLAYERS (WITH RESUME PROMPT) ================= */
 fetch("players.json")
   .then(r => r.json())
   .then(data => {
     players = [...data];
-    currentPool = [...players];
-    drawWheel();
+
+    if (localStorage.getItem("auctionState")) {
+      resumeOverlay.style.display = "flex";
+
+      resumeYes.onclick = () => {
+        loadAuctionState();
+        resumeOverlay.style.display = "none";
+        drawWheel();
+        updateFinalBanner();
+      };
+
+      resumeNo.onclick = () => {
+        localStorage.removeItem("auctionState");
+        currentPool = [...players];
+        resumeOverlay.style.display = "none";
+        drawWheel();
+        updateFinalBanner();
+      };
+    } else {
+      currentPool = [...players];
+      drawWheel();
+      updateFinalBanner();
+    }
   });
 
-/* DRAW WHEEL */
+/* ================= DRAW WHEEL ================= */
 function drawWheel() {
   if (!currentPool.length) return;
 
   const r = canvas.width / 2;
-  const sliceAngle = (2 * Math.PI) / currentPool.length;
+  const slice = (2 * Math.PI) / currentPool.length;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.save();
@@ -57,22 +176,15 @@ function drawWheel() {
 
   currentPool.forEach((p, i) => {
     ctx.beginPath();
-
-    if (i === highlightIndex) {
-      ctx.fillStyle = "#fff59d";
-      ctx.shadowColor = "gold";
-      ctx.shadowBlur = 30;
-    } else {
-      ctx.fillStyle = i % 2 ? "#d4a017" : "#f5c542";
-      ctx.shadowBlur = 0;
-    }
-
+    ctx.fillStyle = i === highlightIndex ? "#fff59d" : (i % 2 ? "#d4a017" : "#f5c542");
+    ctx.shadowBlur = i === highlightIndex ? 30 : 0;
+    ctx.shadowColor = "gold";
     ctx.moveTo(0, 0);
-    ctx.arc(0, 0, r, sliceAngle * i, sliceAngle * (i + 1));
+    ctx.arc(0, 0, r, slice * i, slice * (i + 1));
     ctx.fill();
 
     ctx.save();
-    ctx.rotate(sliceAngle * i + sliceAngle / 2);
+    ctx.rotate(slice * i + slice / 2);
     ctx.fillStyle = "#000";
     ctx.font = "16px Arial";
     ctx.textAlign = "right";
@@ -83,156 +195,171 @@ function drawWheel() {
   ctx.restore();
 }
 
-/* SPIN */
+/* ================= SPIN ================= */
 spinBtn.onclick = () => {
   if (spinning) return;
   spinning = true;
 
-  bgMusic.play().catch(()=>{});
-  bgMusic.volume = 0.2;
+  if (!isVideoPlaying) {
+    bgMusic.play().catch(() => {});
+    bgMusic.volume = 0.2;
+  }
 
   spinSound.currentTime = 0;
-  spinSound.play().catch(()=>{});
+  spinSound.play();
 
-  const startRotation = rotation;
-  const spinAmount = Math.random() * 10 + 10;
+  const isFinal = currentPool.length <= 5;
+  const spinAmt = isFinal ? Math.random() * 6 + 6 : Math.random() * 10 + 10;
+  const duration = isFinal ? 1800 : 3000;
+
+  const startRot = rotation;
   const start = performance.now();
 
   function animate(t) {
-    const progress = Math.min((t - start) / 3000, 1);
-    rotation = startRotation + spinAmount * (1 - Math.pow(1 - progress, 3));
+    const p = Math.min((t - start) / duration, 1);
+    rotation = startRot + spinAmt * (1 - Math.pow(1 - p, 3));
     drawWheel();
 
-    if (progress < 1) {
-      requestAnimationFrame(animate);
-    } else {
+    if (p < 1) requestAnimationFrame(animate);
+    else {
       spinning = false;
       spinSound.pause();
-      determineWinner(); // IMPORTANT
+      determineWinner();
     }
   }
 
   requestAnimationFrame(animate);
 };
 
-/* ================= POINTER → SLICE FIX ================= */
+/* ================= POINTER → SLICE ================= */
 function determineWinner() {
-  const sliceAngle = (2 * Math.PI) / currentPool.length;
+  const slice = (2 * Math.PI) / currentPool.length;
+  let norm = rotation % (2 * Math.PI);
+  if (norm < 0) norm += 2 * Math.PI;
 
-  // Normalize rotation
-  let normalizedRotation = rotation % (2 * Math.PI);
-  if (normalizedRotation < 0) normalizedRotation += 2 * Math.PI;
-
-  /*
-    Canvas:
-    0 rad = 3 o'clock
-    Pointer = 12 o'clock (downward arrow)
-    12 o'clock = 3π/2
-  */
-  const pointerAngle =
-    (3 * Math.PI / 2 - normalizedRotation + 2 * Math.PI) % (2 * Math.PI);
-
-  highlightIndex = Math.floor(pointerAngle / sliceAngle);
-
+  const pointer = (3 * Math.PI / 2 - norm + 2 * Math.PI) % (2 * Math.PI);
+  highlightIndex = Math.floor(pointer / slice);
   drawWheel();
 
-  // Highlight for 1.5s
-  setTimeout(() => {
-    selectPlayer();
-  }, 1500);
+  setTimeout(selectPlayer, 1500);
 }
 
-/* SELECT PLAYER (DO NOT RECALCULATE INDEX) */
+/* ================= SELECT PLAYER ================= */
 function selectPlayer() {
-  selectedPlayer = currentPool.splice(highlightIndex, 1)[0];
+  const player = currentPool.splice(highlightIndex, 1)[0];
   highlightIndex = null;
+
+  historyStack.push({
+    player,
+    pool: [...currentPool],
+    unsold: [...unsoldPlayers]
+  });
 
   wheelSection.style.display = "none";
   revealScreen.style.display = "flex";
 
-  bgMusic.volume = 0; // mute during video
-  revealSound.play().catch(()=>{});
+  decisionButtons.style.display = "none";
+  statusText.style.display = "none";
+  revealScreen.classList.remove("sold-bg", "unsold-bg");
 
-  video.src = selectedPlayer.video;
+  /* 🔇 HARD STOP BG MUSIC */
+  isVideoPlaying = true;
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
+
+  revealSound.currentTime = 0;
+  revealSound.play();
+
+  video.src = player.video;
   video.style.display = "block";
   video.play();
 
-  setTimeout(stopVideo, 10000);
-  video.onended = stopVideo;
+  setTimeout(() => stopVideo(player), 10000);
 }
 
-function stopVideo() {
+/* ================= AFTER VIDEO ================= */
+function stopVideo(player) {
+  isVideoPlaying = false;
+
   video.pause();
   revealSound.pause();
   video.style.display = "none";
 
-  bgMusic.volume = 0.25; // low during card
-  showCard();
-}
-
-function showCard() {
-  card.src = selectedPlayer.card;
+  card.src = player.card;
   card.style.display = "block";
   card.className = "fade-in";
-  cardHitSound.play().catch(()=>{});
+
+  cardHitSound.currentTime = 0;
+  cardHitSound.play();
+
+  setTimeout(() => fadeInBgMusic(0.25, 1500), 1500);
   decisionButtons.style.display = "flex";
 }
 
-/* SOLD / UNSOLD */
+/* ================= SOLD / UNSOLD ================= */
 soldBtn.onclick = () => decision(false);
 unsoldBtn.onclick = () => decision(true);
 
 function decision(isUnsold) {
   decisionButtons.style.display = "none";
+
   statusText.innerText = isUnsold ? "UNSOLD" : "SOLD";
   statusText.style.display = "block";
   revealScreen.classList.add(isUnsold ? "unsold-bg" : "sold-bg");
 
-  lastDecision = { player: selectedPlayer, unsold: isUnsold };
+  if (isUnsold) {
+    unsoldPlayers.push(historyStack.at(-1).player);
+    playForDuration(unsoldSound, 3000);
+  } else {
+    playForDuration(soldSound, 3000);
+  }
+
   undoBtn.style.display = "block";
+  saveAuctionState();
 
   setTimeout(() => {
-    revealScreen.classList.add("fade-out");
+    revealScreen.style.display = "none";
+    revealScreen.className = "";
+    card.style.display = "none";
+    statusText.style.display = "none";
 
-    setTimeout(() => {
-      revealScreen.style.display = "none";
-      revealScreen.className = "";
-      card.style.display = "none";
-      statusText.style.display = "none";
-      bgMusic.volume = 0.45;
+    bgMusic.volume = volumeSlider.value / 100;
 
-      if (isUnsold) unsoldPlayers.push(selectedPlayer);
-
-      if (!currentPool.length) {
-        showEndScreen();
-      } else {
-        wheelSection.style.display = "flex";
-        drawWheel();
-      }
-    }, 600);
+    if (!currentPool.length) {
+      showEndScreen();
+    } else {
+      wheelSection.style.display = "flex";
+      wheelSection.classList.add("fade-in");
+      drawWheel();
+      updateFinalBanner();
+    }
   }, 2000);
 }
 
-/* UNDO */
+/* ================= UNDO ================= */
 undoBtn.onclick = () => {
-  if (!lastDecision) return;
+  if (!historyStack.length) return;
 
-  currentPool.unshift(lastDecision.player);
-  if (lastDecision.unsold) unsoldPlayers.pop();
+  const last = historyStack.pop();
+  currentPool = [last.player, ...last.pool];
+  unsoldPlayers = [...last.unsold];
 
-  lastDecision = null;
-  undoBtn.style.display = "none";
+  if (!historyStack.length) undoBtn.style.display = "none";
+  saveAuctionState();
 
-  wheelSection.style.display = "flex";
   revealScreen.style.display = "none";
+  finalScreen.style.display = "none";
+  wheelSection.style.display = "flex";
+  wheelSection.classList.add("fade-in");
+
   drawWheel();
+  updateFinalBanner();
 };
 
-/* END SCREEN */
+/* ================= FINAL SCREEN ================= */
 function showEndScreen() {
   unsoldPlayers.sort((a, b) => b.rating - a.rating);
 
-  finalScreen.style.display = "block";
   finalScreen.innerHTML = `
     <h1>AUCTION ROUND COMPLETE</h1>
     <div class="final-buttons">
@@ -248,35 +375,64 @@ function showEndScreen() {
         ? `<div class="unsold-table">
             <table>
               <tr><th>PLAYER</th><th>RATING</th></tr>
-              ${unsoldPlayers
-                .map(p => `<tr><td>${p.name}</td><td>${p.rating}</td></tr>`)
-                .join("")}
+              ${unsoldPlayers.map(p => `<tr><td>${p.name}</td><td>${p.rating}</td></tr>`).join("")}
             </table>
           </div>`
         : ""
     }
   `;
+
+  finalScreen.style.display = "block";
+  finalScreen.classList.add("fade-in");
 }
 
 function startUnsoldAuction() {
   finalScreen.style.display = "none";
   currentPool = [...unsoldPlayers];
   unsoldPlayers = [];
+  saveAuctionState();
+
   wheelSection.style.display = "flex";
+  wheelSection.classList.add("fade-in");
   drawWheel();
+  updateFinalBanner();
 }
 
 function endAuction() {
+  localStorage.removeItem("auctionState");
   finalScreen.innerHTML = `<h1>🏁 AUCTION IS OVER</h1><p>THANK YOU FOR ATTENDING</p>`;
 }
 
-/* KEYBOARD SHORTCUTS */
-document.addEventListener("keydown", e => {
-  if (e.code === "Space") {
-    e.preventDefault();
-    spinBtn.click();
+/* ================= KEYBOARD ================= */
+document.addEventListener("keydown", (e) => {
+  if (e.code === "Space") e.preventDefault();
+  if (video.style.display === "block") return;
+
+  switch (e.key) {
+    case " ":
+      spinBtn.click();
+      break;
+    case "s":
+      soldBtn.click();
+      break;
+    case "u":
+      unsoldBtn.click();
+      break;
+    case "z":
+      undoBtn.click();
+      break;
+    case "+":
+    case "=":
+      volumeSlider.value = Math.min(100, +volumeSlider.value + 5);
+      setMasterVolume(volumeSlider.value / 100);
+      break;
+    case "-":
+    case "_":
+      volumeSlider.value = Math.max(0, +volumeSlider.value - 5);
+      setMasterVolume(volumeSlider.value / 100);
+      break;
+    case "e":
+      endAuction();
+      break;
   }
-  if (e.key === "s") soldBtn.click();
-  if (e.key === "u") unsoldBtn.click();
-  if (e.key === "e") endAuction();
 });

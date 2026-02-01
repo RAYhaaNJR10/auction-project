@@ -10,6 +10,9 @@
 <div id="wheelSection">
   <h1 id="title">FOOTBALL PLAYER AUCTION</h1>
 
+  <!-- FINAL PICKS BANNER -->
+  <div id="finalBanner">FINAL PICKS</div>
+
   <div class="wheel-container">
     <div class="pointer">▼</div>
     <canvas id="wheel" width="500" height="500"></canvas>
@@ -32,6 +35,23 @@
 </div>
 
 <div id="finalScreen"></div>
+
+<!-- RESUME CONFIRMATION POPUP -->
+<div id="resumeOverlay">
+  <div id="resumeBox">
+    <h2>Previous auction detected</h2>
+    <p>Do you want to resume?</p>
+    <div class="resume-actions">
+      <button id="resumeYes" class="btn success">RESUME</button>
+      <button id="resumeNo" class="btn danger">START FRESH</button>
+    </div>
+  </div>
+</div>
+
+<!-- MASTER VOLUME (MUST BE BEFORE SCRIPT) -->
+<div id="volumeControl">
+  <input type="range" id="volumeSlider" min="0" max="100" value="45">
+</div>
 
 <script src="script.js"></script>
 </body>
