@@ -7,35 +7,30 @@
 </head>
 <body>
 
-<!-- SPIN PAGE -->
 <div id="wheelSection">
-  <h1 id="title">Football Player Auction</h1>
+  <h1 id="title">FOOTBALL PLAYER AUCTION</h1>
 
   <div class="wheel-container">
-    <canvas id="wheel" width="500" height="500"></canvas>
     <div class="pointer">▼</div>
+    <canvas id="wheel" width="500" height="500"></canvas>
   </div>
 
-  <button id="spinBtn">SPIN</button>
+  <button id="spinBtn" class="btn primary">SPIN</button>
 </div>
 
-<!-- REVEAL PAGE -->
+<button id="undoBtn" class="btn warning">UNDO</button>
+
 <div id="revealScreen">
-
-  <video id="playerVideo" autoplay muted></video>
-
+  <video id="playerVideo" muted></video>
   <img id="playerCard">
-
   <div id="statusText"></div>
 
   <div id="decisionButtons">
-    <button id="unsoldBtn">UNSOLD</button>
-    <button id="soldBtn">SOLD</button>
+    <button id="unsoldBtn" class="btn danger">UNSOLD</button>
+    <button id="soldBtn" class="btn success">SOLD</button>
   </div>
-
 </div>
 
-<!-- FINAL SCREEN -->
 <div id="finalScreen"></div>
 
 <script src="script.js"></script>

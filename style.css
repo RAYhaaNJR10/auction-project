@@ -1,29 +1,63 @@
+/* ================= GLOBAL ================= */
+
 body {
   margin: 0;
   background: black;
   color: white;
-  font-family: Arial, sans-serif;
+  font-family: "Segoe UI", Arial, sans-serif;
   text-align: center;
 }
 
-/* =========================
-   SPIN PAGE
-   ========================= */
+/* ================= BUTTON SYSTEM ================= */
+
+.btn {
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border-radius: 30px;
+  padding: 14px 42px;
+  font-size: 18px;
+  transition: all 0.25s ease;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.primary {
+  background: linear-gradient(135deg, #ffd700, #ffb700);
+  color: black;
+  box-shadow: 0 0 15px rgba(255,215,0,0.6);
+}
+
+.success {
+  background: linear-gradient(135deg, #00ff88, #00cc66);
+  color: black;
+  box-shadow: 0 0 15px rgba(0,255,136,0.6);
+}
+
+.danger {
+  background: linear-gradient(135deg, #ff4d4d, #cc0000);
+  color: white;
+  box-shadow: 0 0 15px rgba(255,77,77,0.6);
+}
+
+.warning {
+  background: linear-gradient(135deg, #ffcc00, #ff9900);
+  color: black;
+  box-shadow: 0 0 12px rgba(255,204,0,0.6);
+}
+
+/* ================= WHEEL PAGE ================= */
 
 #wheelSection {
   height: 100vh;
-  width: 100vw;
-
-  background-image: url("assets/kurrah.jpeg");
-  background-size: cover;
-  background-position: top center; /* ✅ UPPER PART */
-  background-repeat: no-repeat;
-
+  background: url("assets/kurrah.jpeg") top center / cover no-repeat;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-
+  align-items: center;
   position: relative;
 }
 
@@ -31,8 +65,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 0;
+  background: rgba(0,0,0,0.7);
 }
 
 #wheelSection * {
@@ -40,9 +73,11 @@ body {
   z-index: 1;
 }
 
-/* =========================
-   WHEEL
-   ========================= */
+#title {
+  font-size: 42px;
+  margin-bottom: 20px;
+  text-shadow: 0 0 14px gold;
+}
 
 .wheel-container {
   position: relative;
@@ -50,22 +85,23 @@ body {
 
 .pointer {
   position: absolute;
-  top: -10px;
+  top: -8px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 30px;
+  font-size: 32px;
 }
 
-#spinBtn {
-  margin-top: 20px;
-  font-size: 20px;
-  padding: 12px 30px;
-  cursor: pointer;
+/* ================= UNDO ================= */
+
+#undoBtn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: none;
+  z-index: 20;
 }
 
-/* =========================
-   REVEAL SCREEN
-   ========================= */
+/* ================= REVEAL ================= */
 
 #revealScreen {
   position: fixed;
@@ -75,7 +111,14 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  z-index: 10;
+}
+
+#revealScreen.sold-bg {
+  background: radial-gradient(circle, rgba(0,255,140,0.35), rgba(0,70,25,0.95));
+}
+
+#revealScreen.unsold-bg {
+  background: radial-gradient(circle, rgba(255,70,70,0.35), rgba(80,0,0,0.95));
 }
 
 #playerVideo {
@@ -90,40 +133,104 @@ body {
   display: none;
 }
 
-/* SOLD / UNSOLD TEXT */
 #statusText {
   font-size: 48px;
-  font-weight: bold;
   margin-top: 20px;
+  letter-spacing: 4px;
+  -webkit-text-stroke: 2px black;
+  text-shadow: 0 0 12px gold;
   display: none;
 }
 
-/* BUTTONS */
+/* ================= DECISION BUTTONS ================= */
+
 #decisionButtons {
   position: fixed;
   bottom: 30px;
   width: 100%;
   display: none;
   justify-content: space-between;
-  padding: 0 60px;
+  padding: 0 80px;
 }
 
-#soldBtn {
-  background: green;
-  color: white;
-  font-size: 18px;
-  padding: 12px 28px;
-}
+/* ================= FINAL SCREEN ================= */
 
-#unsoldBtn {
-  background: crimson;
-  color: white;
-  font-size: 18px;
-  padding: 12px 28px;
-}
-
-/* FINAL */
 #finalScreen {
   display: none;
+  min-height: 100vh;
+  background: url("assets/kurrah.jpeg") top center / cover no-repeat;
+  position: relative;
   padding: 40px;
+}
+
+#finalScreen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+}
+
+#finalScreen * {
+  position: relative;
+  z-index: 1;
+}
+
+.final-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+/* ================= UNSOLD TABLE ================= */
+
+.unsold-table {
+  width: 70%;
+  margin: auto;
+  background: rgba(0,0,0,0.65);
+  border: 2px solid #ffcc00;
+  box-shadow: 0 0 20px rgba(255,204,0,0.6);
+  padding: 20px;
+}
+
+.unsold-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.unsold-table th {
+  color: #ffcc00;
+  font-size: 22px;
+  text-align: left;
+  border-bottom: 2px solid #ffcc00;
+}
+
+.unsold-table td {
+  font-size: 20px;
+  padding: 6px 0;
+}
+
+.unsold-table th:last-child,
+.unsold-table td:last-child {
+  text-align: right;
+}
+
+/* ================= ANIMATIONS ================= */
+
+.fade-in {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
