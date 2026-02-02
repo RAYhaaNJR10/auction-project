@@ -4,7 +4,7 @@
     "name": "LMarquinhos",
     "position": "CB",
     "rating": 86,
-    "video": "videos/marquinhostempvideo.mp4",
+    "video": "",
     "card": "cards/marquinhostestcard.png"
   },
   {
@@ -12,7 +12,7 @@
     "name": "Messi",
     "position": "CF",
     "rating": 93,
-    "video": "videos/messitempvideo.mp4",
+    "video": "",
     "card": "cards/messitestcard.png"
   }
 ]

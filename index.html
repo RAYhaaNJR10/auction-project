@@ -7,10 +7,19 @@
 </head>
 <body>
 
-<div id="wheelSection">
-  <h1 id="title">FOOTBALL PLAYER AUCTION</h1>
+<!-- MAIN MENU -->
+<div id="mainMenu">
+  <h1>FOOTBALL AUCTION SYSTEM</h1>
+  <div class="menu-options">
+    <button id="auctionBtn" class="btn primary large">START AUCTION</button>
+    <button id="teamsBtn" class="btn success large">VIEW TEAMS</button>
+  </div>
+</div>
 
-  <!-- FINAL PICKS BANNER -->
+<!-- WHEEL SCREEN -->
+<div id="wheelSection">
+  <button id="backToMenuFromAuctionBtn" class="btn warning" style="position: fixed; top: 20px; left: 20px; z-index: 1000;">MENU</button>
+  <h1>FOOTBALL PLAYER AUCTION</h1>
   <div id="finalBanner">FINAL PICKS</div>
 
   <div class="wheel-container">
@@ -23,44 +32,65 @@
 
 <button id="undoBtn" class="btn warning">UNDO</button>
 
+<!-- REVEAL SCREEN -->
 <div id="revealScreen">
-  <video id="playerVideo" muted></video>
-  <img id="playerCard">
+  <div id="teamSidebar"></div>
 
-  <!-- 🔥 STAMP (REQUIRED) -->
-  <div id="stamp"></div>
+  <div class="reveal-center">
+    <img id="playerCard">
+    <div id="playerNameFallback"></div>
 
-  <div id="decisionButtons">
-    <button id="unsoldBtn" class="btn danger">UNSOLD</button>
-    <button id="soldBtn" class="btn success">SOLD</button>
-  </div>
-</div>
+    <div id="auctionControls">
+      <button id="minusBtn">−50</button>
+      <span id="currentPrice">₹50</span>
+      <button id="plusBtn">+50</button>
+    </div>
 
+    <div id="stamp"></div>
 
-<div id="finalScreen"></div>
-
-<!-- RESUME CONFIRMATION POPUP -->
-<div id="resumeOverlay">
-  <div id="resumeBox">
-    <h2>Previous auction detected</h2>
-    <p>Do you want to resume?</p>
-    <div class="resume-actions">
-      <button id="resumeYes" class="btn success">RESUME</button>
-      <button id="resumeNo" class="btn danger">START FRESH</button>
+    <div id="decisionButtons">
+      <button id="unsoldBtn" class="btn danger">UNSOLD</button>
+      <button id="soldBtn" class="btn success">SOLD</button>
     </div>
   </div>
 </div>
 
-<!-- MASTER VOLUME (MUST BE BEFORE SCRIPT) -->
-<div id="volumeControl">
-  <input type="range" id="volumeSlider" min="0" max="100" value="45">
-</div>
-
-<script src="script.js"></script>
-<!-- ROUND COMPLETED OVERLAY -->
+<!-- ROUND COMPLETE OVERLAY -->
 <div id="roundCompleteScreen">
   <div class="round-complete-text">ROUND COMPLETED</div>
 </div>
 
+<!-- FINAL SCREEN -->
+<div id="finalScreen"></div>
+
+<!-- TEAMS PAGE -->
+<div id="teamsPage">
+  <div class="teams-header">
+    <h1>TEAMS</h1>
+    <button id="backToMenuBtn" class="btn warning">BACK TO MENU</button>
+  </div>
+  <div id="teamsList"></div>
+</div>
+
+<!-- TEAM DETAIL PAGE -->
+<div id="teamDetailPage">
+  <div class="team-detail-header">
+    <h1 id="teamDetailTitle"></h1>
+    <button id="backToTeamsBtn" class="btn warning">BACK TO TEAMS</button>
+  </div>
+  <div id="teamPlayersGrid"></div>
+</div>
+
+<!-- RESUME POPUP -->
+<div id="resumeOverlay">
+  <div id="resumeBox">
+    <h2>Previous auction detected</h2>
+    <p>Do you want to resume?</p>
+    <button id="resumeYes" class="btn success">RESUME</button>
+    <button id="resumeNo" class="btn danger">START FRESH</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
