@@ -338,3 +338,158 @@ body {
 #volumeSlider {
   width: 120px;
 }
+
+/* ================= SOLD / UNSOLD STAMP ================= */
+
+#stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-18deg) scale(0);
+  padding: 18px 50px;
+
+  font-size: 72px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  font-family: "Impact", "Arial Black", sans-serif;
+
+  border: 6px solid;
+  border-radius: 12px;
+
+  opacity: 0;
+  pointer-events: none;
+  z-index: 60;
+}
+
+/* SOLD look */
+#stamp.sold {
+  color: #00ff88;
+  border-color: #00ff88;
+  text-shadow:
+    0 0 10px rgba(0,255,136,0.8),
+    0 0 30px rgba(0,255,136,0.6);
+}
+
+/* UNSOLD look */
+#stamp.unsold {
+  color: #ff4d4d;
+  border-color: #ff4d4d;
+  text-shadow:
+    0 0 10px rgba(255,77,77,0.8),
+    0 0 30px rgba(255,77,77,0.6);
+}
+
+/* Slam animation */
+#stamp.show {
+  animation: stampSlam 0.35s ease-out forwards;
+}
+
+@keyframes stampSlam {
+  0% {
+    transform: translate(-50%, -50%) rotate(-18deg) scale(2.2);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-50%, -50%) rotate(-18deg) scale(0.9);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-18deg) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Screen shake effect */
+@keyframes screenShake {
+  0% { transform: translate(0); }
+  25% { transform: translate(-6px, 4px); }
+  50% { transform: translate(6px, -4px); }
+  75% { transform: translate(-4px, -6px); }
+  100% { transform: translate(0); }
+}
+
+.shake {
+  animation: screenShake 0.3s;
+}
+
+/* ================= CARD DEPTH EFFECT ================= */
+
+#playerCard {
+  animation: cardPop 0.5s ease forwards;
+}
+
+@keyframes cardPop {
+  0% {
+    transform: scale(0.94);
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+    opacity: 1;
+  }
+}
+/* ================= ROUND COMPLETE BANNER ================= */
+
+.round-complete {
+  font-size: 72px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  font-family: "Impact", "Arial Black", sans-serif;
+  color: #ffcc00;
+  text-shadow:
+    0 0 15px rgba(255,204,0,0.8),
+    0 0 40px rgba(255,204,0,0.6);
+  animation: fadeIn 0.6s ease;
+}
+
+/* ================= ROUND COMPLETED OVERLAY ================= */
+
+#roundCompleteScreen {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1200;
+  opacity: 0;
+}
+
+.round-complete-text {
+  font-size: 72px;
+  font-weight: 900;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  font-family: "Impact", "Arial Black", sans-serif;
+  color: #ffcc00;
+  text-shadow:
+    0 0 15px rgba(255,204,0,0.8),
+    0 0 40px rgba(255,204,0,0.6);
+}
+
+/* Fade helpers (safe to append even if they exist already) */
+.round-fade-in {
+  animation: roundFadeIn 0.8s ease forwards;
+}
+
+.round-fade-out {
+  animation: roundFadeOut 0.8s ease forwards;
+}
+
+@keyframes roundFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes roundFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+#roundCompleteScreen {
+  pointer-events: none;
+}

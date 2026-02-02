@@ -17,7 +17,6 @@ const volumeSlider = document.getElementById("volumeSlider");
 
 const video = document.getElementById("playerVideo");
 const card = document.getElementById("playerCard");
-const statusText = document.getElementById("statusText");
 
 const spinBtn = document.getElementById("spinBtn");
 const soldBtn = document.getElementById("soldBtn");
@@ -25,23 +24,29 @@ const unsoldBtn = document.getElementById("unsoldBtn");
 const decisionButtons = document.getElementById("decisionButtons");
 const undoBtn = document.getElementById("undoBtn");
 
+/* STAMP */
+const stamp = document.getElementById("stamp");
+
 /* ================= AUDIO ================= */
 const spinSound = new Audio("sounds/spin.mp3");
 const revealSound = new Audio("sounds/reveal.mp3");
 const cardHitSound = new Audio("sounds/card-hit.mp3");
-const bgMusic = new Audio("sounds/bg-music.mp3");
 const soldSound = new Audio("sounds/sold.mp3");
 const unsoldSound = new Audio("sounds/unsold.mp3");
 
-bgMusic.loop = true;
+/* 🎵 BACKGROUND MUSIC PLAYLIST */
+const bgTracks = [
+  new Audio("sounds/bg-music-1.mp3"),
+  new Audio("sounds/bg-music-2.mp3")
+];
 
-/* ================= GLOBAL FLAGS ================= */
+let currentBgIndex = 0;
 let isVideoPlaying = false;
 
 /* ================= MASTER VOLUME ================= */
 function setMasterVolume(v) {
   const vol = Math.max(0, Math.min(1, v));
-  bgMusic.volume = vol;
+  bgTracks.forEach(t => t.volume = vol);
   spinSound.volume = vol;
   revealSound.volume = vol;
   cardHitSound.volume = vol;
@@ -53,20 +58,43 @@ volumeSlider.value = 45;
 setMasterVolume(0.45);
 
 volumeSlider.addEventListener("input", () => {
-  // ❗ Do NOT start bg music here
   setMasterVolume(volumeSlider.value / 100);
 });
 
-/* ================= AUDIO HELPERS ================= */
+/* ================= BG MUSIC ================= */
+function getCurrentBg() {
+  return bgTracks[currentBgIndex];
+}
+
+function playBgMusic() {
+  if (isVideoPlaying) return;
+  getCurrentBg().play().catch(() => {});
+}
+
+function stopBgMusic() {
+  bgTracks.forEach(t => {
+    t.pause();
+    t.currentTime = 0;
+  });
+}
+
+bgTracks.forEach((track, i) => {
+  track.addEventListener("ended", () => {
+    currentBgIndex = (i + 1) % bgTracks.length;
+    if (!isVideoPlaying) playBgMusic();
+  });
+});
+
 function fadeInBgMusic(targetVolume = 0.25, duration = 1500) {
-  if (isVideoPlaying) return; // ❗ HARD BLOCK
+  if (isVideoPlaying) return;
+
+  const bg = getCurrentBg();
+  bg.volume = 0;
+  bg.play().catch(() => {});
 
   const steps = 30;
   const stepTime = duration / steps;
   const volumeStep = targetVolume / steps;
-
-  bgMusic.volume = 0;
-  bgMusic.play().catch(() => {});
 
   let step = 0;
   const interval = setInterval(() => {
@@ -75,18 +103,30 @@ function fadeInBgMusic(targetVolume = 0.25, duration = 1500) {
       return;
     }
     step++;
-    bgMusic.volume = Math.min(step * volumeStep, targetVolume);
+    bg.volume = Math.min(step * volumeStep, targetVolume);
     if (step >= steps) clearInterval(interval);
   }, stepTime);
 }
 
-function playForDuration(audio, duration = 3000) {
-  audio.currentTime = 0;
-  audio.play().catch(() => {});
+/* ================= STAMP EFFECT ================= */
+function showStamp(type) {
+  stamp.className = "";
+  stamp.innerText = type === "sold" ? "SOLD" : "UNSOLD";
+
+  stamp.classList.add(type);
+  stamp.classList.add("show");
+
+  /* 🔊 use unsold.mp3 as thud */
+  unsoldSound.currentTime = 0;
+  unsoldSound.play().catch(() => {});
+
+  revealScreen.classList.add("shake");
+  setTimeout(() => revealScreen.classList.remove("shake"), 300);
+
   setTimeout(() => {
-    audio.pause();
-    audio.currentTime = 0;
-  }, duration);
+    stamp.className = "";
+    stamp.innerText = "";
+  }, 1500);
 }
 
 /* ================= AUTO SAVE ================= */
@@ -132,7 +172,7 @@ function updateFinalBanner() {
   finalBanner.style.display = currentPool.length <= 5 ? "block" : "none";
 }
 
-/* ================= LOAD PLAYERS (WITH RESUME PROMPT) ================= */
+/* ================= LOAD PLAYERS ================= */
 fetch("players.json")
   .then(r => r.json())
   .then(data => {
@@ -176,12 +216,22 @@ function drawWheel() {
 
   currentPool.forEach((p, i) => {
     ctx.beginPath();
-    ctx.fillStyle = i === highlightIndex ? "#fff59d" : (i % 2 ? "#d4a017" : "#f5c542");
+    ctx.fillStyle = i === highlightIndex ? "#fff8b0" : (i % 2 ? "#d4a017" : "#f5c542");
+
+if (i === highlightIndex) {
+  ctx.lineWidth = 6;
+  ctx.strokeStyle = "rgba(255, 255, 200, 0.9)";
+  ctx.shadowBlur = 25;
+  ctx.shadowColor = "gold";
+}
+
     ctx.shadowBlur = i === highlightIndex ? 30 : 0;
     ctx.shadowColor = "gold";
     ctx.moveTo(0, 0);
     ctx.arc(0, 0, r, slice * i, slice * (i + 1));
     ctx.fill();
+    if (i === highlightIndex) ctx.stroke();
+
 
     ctx.save();
     ctx.rotate(slice * i + slice / 2);
@@ -200,10 +250,8 @@ spinBtn.onclick = () => {
   if (spinning) return;
   spinning = true;
 
-  if (!isVideoPlaying) {
-    bgMusic.play().catch(() => {});
-    bgMusic.volume = 0.2;
-  }
+  playBgMusic();
+  getCurrentBg().volume = 0.2;
 
   spinSound.currentTime = 0;
   spinSound.play();
@@ -259,13 +307,10 @@ function selectPlayer() {
   revealScreen.style.display = "flex";
 
   decisionButtons.style.display = "none";
-  statusText.style.display = "none";
   revealScreen.classList.remove("sold-bg", "unsold-bg");
 
-  /* 🔇 HARD STOP BG MUSIC */
   isVideoPlaying = true;
-  bgMusic.pause();
-  bgMusic.currentTime = 0;
+  stopBgMusic();
 
   revealSound.currentTime = 0;
   revealSound.play();
@@ -303,15 +348,10 @@ unsoldBtn.onclick = () => decision(true);
 function decision(isUnsold) {
   decisionButtons.style.display = "none";
 
-  statusText.innerText = isUnsold ? "UNSOLD" : "SOLD";
-  statusText.style.display = "block";
-  revealScreen.classList.add(isUnsold ? "unsold-bg" : "sold-bg");
+  showStamp(isUnsold ? "unsold" : "sold");
 
   if (isUnsold) {
     unsoldPlayers.push(historyStack.at(-1).player);
-    playForDuration(unsoldSound, 3000);
-  } else {
-    playForDuration(soldSound, 3000);
   }
 
   undoBtn.style.display = "block";
@@ -321,12 +361,9 @@ function decision(isUnsold) {
     revealScreen.style.display = "none";
     revealScreen.className = "";
     card.style.display = "none";
-    statusText.style.display = "none";
-
-    bgMusic.volume = volumeSlider.value / 100;
 
     if (!currentPool.length) {
-      showEndScreen();
+      showRoundCompletedThenFinal();
     } else {
       wheelSection.style.display = "flex";
       wheelSection.classList.add("fade-in");
@@ -400,8 +437,66 @@ function startUnsoldAuction() {
 
 function endAuction() {
   localStorage.removeItem("auctionState");
+  stopBgMusic();
   finalScreen.innerHTML = `<h1>🏁 AUCTION IS OVER</h1><p>THANK YOU FOR ATTENDING</p>`;
 }
+
+/* ================= ROUND COMPLETED SCREEN ================= */
+
+const roundCompleteScreen = document.getElementById("roundCompleteScreen");
+
+function showRoundCompletedThenFinal() {
+  const rc = document.getElementById("roundCompleteScreen");
+  if (!rc) {
+    showEndScreen();
+    return;
+  }
+
+  // Reset state
+  rc.style.display = "flex";
+  rc.style.opacity = "0";
+  rc.classList.remove("round-fade-out");
+  rc.classList.add("round-fade-in");
+
+  // 🔊 card hit on fade-in
+  cardHitSound.currentTime = 0;
+  cardHitSound.play().catch(() => {});
+
+  // Fade out
+  setTimeout(() => {
+    rc.classList.remove("round-fade-in");
+    rc.classList.add("round-fade-out");
+  }, 1600);
+
+  // Fully hide overlay, THEN show final screen
+  setTimeout(() => {
+    rc.classList.remove("round-fade-out");
+    rc.style.display = "none";
+    rc.style.opacity = "0";
+    showEndScreen();
+  }, 2400);
+}
+
+/* ================= ROUND COMPLETE FIX (HARD RESET) ================= */
+
+function hideRoundCompleteScreen() {
+  const rc = document.getElementById("roundCompleteScreen");
+  if (!rc) return;
+
+  rc.classList.remove("round-fade-in");
+  rc.classList.remove("round-fade-out");
+  rc.style.opacity = "0";
+  rc.style.display = "none";
+}
+
+/* Override safety: always clear overlay before final screen */
+const _originalShowEndScreen = showEndScreen;
+showEndScreen = function () {
+  hideRoundCompleteScreen();
+  _originalShowEndScreen();
+};
+
+
 
 /* ================= KEYBOARD ================= */
 document.addEventListener("keydown", (e) => {
