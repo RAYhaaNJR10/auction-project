@@ -25,18 +25,39 @@ const resumeYes = document.getElementById("resumeYes");
 const resumeNo = document.getElementById("resumeNo");
 const undoBtn = document.getElementById("undoBtn");
 
-// Main menu and navigation
-const mainMenu = document.getElementById("mainMenu");
-const auctionBtn = document.getElementById("auctionBtn");
-const teamsBtn = document.getElementById("teamsBtn");
-const teamsPage = document.getElementById("teamsPage");
-const teamsList = document.getElementById("teamsList");
-const teamDetailPage = document.getElementById("teamDetailPage");
-const teamDetailTitle = document.getElementById("teamDetailTitle");
-const teamPlayersGrid = document.getElementById("teamPlayersGrid");
-const backToMenuBtn = document.getElementById("backToMenuBtn");
-const backToTeamsBtn = document.getElementById("backToTeamsBtn");
-const backToMenuFromAuctionBtn = document.getElementById("backToMenuFromAuctionBtn");
+// Navigation (teams page removed)
+
+/* ================= SERVER BACKUP (safety layer, not replacement for localStorage) ================= */
+const SERVER_BASE_URL = 'http://localhost:4000';
+let serverBackupState = null;
+
+async function saveStateToServer() {
+  try {
+    const payload = { currentPool, unsoldPlayers, teams };
+    await fetch(`${SERVER_BASE_URL}/save-state`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch (err) {
+    console.warn('Server backup failed', err);
+  }
+}
+
+async function tryLoadServerBackup() {
+  try {
+    const res = await fetch(`${SERVER_BASE_URL}/load-state`);
+    if (!res.ok) return false;
+    const { state } = await res.json();
+    if (state) {
+      serverBackupState = state;
+      return true;
+    }
+  } catch (err) {
+    console.warn('Server backup fetch failed', err);
+  }
+  return false;
+}
 
 /* ================= AUDIO ================= */
 const spinSound = new Audio("sounds/spin.mp3");
@@ -48,8 +69,12 @@ bgMusic.loop = true;
 
 /* ================= CONFIG ================= */
 const BASE_PRICE = 50;
-const BID_STEP = 50;
 const MAX_PLAYERS_PER_TEAM = 6;
+
+// Dynamic bid step: 25 until 400, then 50
+function getBidStep() {
+  return currentBid < 400 ? 25 : 50;
+}
 
 /* ================= STATE ================= */
 let players = [];
@@ -81,7 +106,10 @@ function saveState() {
   localStorage.setItem("auctionState", JSON.stringify({
     currentPool,
     unsoldPlayers,
-    teams
+    teams,
+    currentPlayer: currentPlayer ? JSON.parse(JSON.stringify(currentPlayer)) : null,
+    currentBid,
+    selectedTeamId
   }));
 }
 
@@ -114,6 +142,7 @@ function undo() {
   currentPlayer = state.currentPlayer;
   
   saveState();
+  saveStateToServer();
   
   // Return to wheel if we're not in reveal screen
   if (revealScreen.style.display !== "flex") {
@@ -146,159 +175,155 @@ function loadState() {
   if (!s) return false;
 
   const state = JSON.parse(s);
-  currentPool = state.currentPool;
-  unsoldPlayers = state.unsoldPlayers;
-  teams = state.teams;
+  currentPool = state.currentPool || [];
+  unsoldPlayers = state.unsoldPlayers || [];
+  teams = state.teams || teams;
+  currentPlayer = state.currentPlayer || null;
+  currentBid = state.currentBid || BASE_PRICE;
+  selectedTeamId = state.selectedTeamId || null;
   undoHistory = []; // Clear undo history when loading saved state
   return true;
 }
 
 /* ================= NAVIGATION ================= */
-function showMainMenu() {
-  hideAllPages();
-  mainMenu.style.display = "flex";
-}
-
 function showAuction() {
-  hideAllPages();
-  wheelSection.style.display = "flex";
-  drawWheel();
-}
-
-function showTeamsPage() {
-  hideAllPages();
-  teamsPage.style.display = "flex";
-  renderTeamsPage();
-}
-
-function showTeamDetail(teamId) {
-  hideAllPages();
-  teamDetailPage.style.display = "flex";
-  renderTeamDetail(teamId);
-}
-
-function hideAllPages() {
-  mainMenu.style.display = "none";
-  wheelSection.style.display = "none";
-  revealScreen.style.display = "none";
-  finalScreen.style.display = "none";
-  roundCompleteScreen.style.display = "none";
-  teamsPage.style.display = "none";
-  teamDetailPage.style.display = "none";
-}
-
-// Navigation event listeners
-auctionBtn.onclick = () => {
+  // Check if we're coming back from final screen with unsold players
+  const state = localStorage.getItem("auctionState");
+  if (state) {
+    const parsedState = JSON.parse(state);
+    // If currentPool is empty but unsoldPlayers exist, show option for unsold auction
+    if ((!parsedState.currentPool || parsedState.currentPool.length === 0) && 
+        parsedState.unsoldPlayers && parsedState.unsoldPlayers.length > 0) {
+      resumeOverlay.style.display = "flex";
+      resumeOverlay.innerHTML = `
+        <div id="resumeBox">
+          <h2>Unsold Players Available</h2>
+          <p>There are ${parsedState.unsoldPlayers.length} unsold players. Would you like to conduct an auction with them?</p>
+          <div class="resume-actions">
+            <button id="resumeYes" class="btn success">YES, START UNSOLD AUCTION</button>
+            <button id="resumeNo" class="btn danger">NO, BACK TO MENU</button>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById("resumeYes").onclick = () => {
+        loadState();
+        currentPool = [...unsoldPlayers];
+        unsoldPlayers = [];
+        currentPlayer = null;
+        currentBid = BASE_PRICE;
+        selectedTeamId = null;
+        saveState();
+        saveStateToServer();
+        resumeOverlay.style.display = "none";
+        hideAllPages();
+        wheelSection.style.display = "flex";
+        drawWheel();
+      };
+      
+      document.getElementById("resumeNo").onclick = () => {
+        // Reset everything when starting fresh
+        localStorage.removeItem("auctionState");
+        currentPool = [...players];
+        unsoldPlayers = [];
+        teams.forEach(team => {
+          team.players = [];
+          team.budget = 1500;
+        });
+        currentPlayer = null;
+        currentBid = BASE_PRICE;
+        selectedTeamId = null;
+        resumeOverlay.style.display = "none";
+        hideAllPages();
+        wheelSection.style.display = "flex";
+        drawWheel();
+      };
+      return;
+    }
+  }
+  
+  // Normal resume check
   if (localStorage.getItem("auctionState")) {
     resumeOverlay.style.display = "flex";
     resumeYes.onclick = () => {
       loadState();
       resumeOverlay.style.display = "none";
-      showAuction();
+      hideAllPages(); // Hide all pages first
+      // Always go back to wheel screen when resuming, put currentPlayer back in pool if exists
+      if (currentPlayer) {
+        // Put the current player back in the pool
+        currentPool.push(currentPlayer);
+        currentPlayer = null;
+        currentBid = BASE_PRICE;
+        selectedTeamId = null;
+        saveState();
+        saveStateToServer();
+      }
+      wheelSection.style.display = "flex";
+      drawWheel();
     };
     resumeNo.onclick = () => {
       localStorage.removeItem("auctionState");
       currentPool = [...players];
       unsoldPlayers = [];
+      // Reset all teams to initial state
+      teams.forEach(team => {
+        team.players = [];
+        team.budget = 1500;
+      });
+      currentPlayer = null;
+      currentBid = BASE_PRICE;
+      selectedTeamId = null;
       resumeOverlay.style.display = "none";
-      showAuction();
+      hideAllPages();
+      wheelSection.style.display = "flex";
+      drawWheel();
     };
   } else {
-    showAuction();
+    hideAllPages();
+    wheelSection.style.display = "flex";
+    drawWheel();
   }
-};
-
-teamsBtn.onclick = () => showTeamsPage();
-backToMenuBtn.onclick = () => showMainMenu();
-backToTeamsBtn.onclick = () => showTeamsPage();
-backToMenuFromAuctionBtn.onclick = () => showMainMenu();
-
-/* ================= TEAMS PAGE ================= */
-function renderTeamsPage() {
-  teamsList.innerHTML = teams.map(team => {
-    const progress = (team.players.length / MAX_PLAYERS_PER_TEAM) * 100;
-    return `
-      <div class="team-card" onclick="showTeamDetail(${team.id})">
-        <div class="team-card-header">
-          <h2>${team.name}</h2>
-          <div class="team-stats">
-            <span class="budget">₹${team.budget}</span>
-            <span class="player-count-badge">${team.players.length}/${MAX_PLAYERS_PER_TEAM}</span>
-          </div>
-        </div>
-        <div class="progress-container">
-          <div class="progress-bar" style="width: ${progress}%"></div>
-        </div>
-        <div class="progress-text">${team.players.length} of ${MAX_PLAYERS_PER_TEAM} players</div>
-      </div>
-    `;
-  }).join("");
 }
 
-window.showTeamDetail = (teamId) => {
-  showTeamDetail(teamId);
-};
-
-/* ================= TEAM DETAIL PAGE ================= */
-function renderTeamDetail(teamId) {
-  if (!teamDetailPage || !teamDetailTitle || !teamPlayersGrid) {
-    console.error("Team detail page elements not found");
-    return;
-  }
-  
-  const team = teams[teamId];
-  if (!team) {
-    console.error("Team not found:", teamId);
-    return;
-  }
-  
-  teamDetailTitle.textContent = team.name;
-  
-  if (team.players.length === 0) {
-    teamPlayersGrid.innerHTML = `
-      <div class="no-players">
-        <h2>No players yet</h2>
-        <p>This team hasn't bought any players in the auction.</p>
-      </div>
-    `;
-    return;
-  }
-  
-  teamPlayersGrid.innerHTML = team.players.map((player, index) => {
-    if (player.card) {
-      return `
-        <div class="player-card-item">
-          <img src="${player.card}" alt="${player.name}" class="player-card-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="player-card-fallback" style="display: none;">${player.name}</div>
-          <div class="player-card-name">${player.name}</div>
-        </div>
-      `;
-    } else {
-      return `
-        <div class="player-card-item">
-          <div class="player-card-fallback">${player.name}</div>
-          <div class="player-card-name">${player.name}</div>
-        </div>
-      `;
-    }
-  }).join("");
+function hideAllPages() {
+  wheelSection.style.display = "none";
+  revealScreen.style.display = "none";
+  finalScreen.style.display = "none";
+  roundCompleteScreen.style.display = "none";
 }
+
+// Navigation event listeners (removed teams page)
 
 /* ================= INIT ================= */
 fetch("players.json")
   .then(r => r.json())
-  .then(data => {
+  .then(async data => {
     players = [...data];
 
-    // Load state if exists
+    // Load state: localStorage first, then server backup fallback
     if (localStorage.getItem("auctionState")) {
       loadState();
+    } else if (await tryLoadServerBackup()) {
+      const state = serverBackupState;
+      currentPool = state.currentPool || [];
+      unsoldPlayers = state.unsoldPlayers || [];
+      teams = state.teams || teams;
+      const resumeFromServer = confirm("Server backup found. Resume auction?");
+      if (!resumeFromServer) {
+        currentPool = [...players];
+        unsoldPlayers = [];
+        teams.forEach(t => { t.players = []; t.budget = 1500; });
+      }
+      // If Yes: state already in memory; saveState will run on next SOLD/UNSOLD
     } else {
       currentPool = [...players];
     }
     
-    // Show main menu on load
-    showMainMenu();
+    // Start directly with auction
+    showAuction();
+    // Initialize button labels
+    updateBidUI();
   });
 
 /* ================= WHEEL ================= */
@@ -453,7 +478,7 @@ function selectPlayer() {
 
   currentBid = BASE_PRICE;
   selectedTeamId = null;
-  updateBidUI();
+  updateBidUI(); // This will update button labels
   renderTeams();
 
   if (currentPlayer.card) {
@@ -478,23 +503,28 @@ plusBtn.onclick = () => {
   const remaining =
     MAX_PLAYERS_PER_TEAM - team.players.length - 1;
   const maxAllowed =
-    team.budget - remaining * BASE_PRICE;
+    team.budget - remaining * 50; // Use 50 as minimum reserve
+  const step = getBidStep();
 
-  if (currentBid + BID_STEP <= maxAllowed) {
-    currentBid += BID_STEP;
+  if (currentBid + step <= maxAllowed) {
+    currentBid += step;
     updateBidUI();
   }
 };
 
 minusBtn.onclick = () => {
-  if (currentBid - BID_STEP >= BASE_PRICE) {
-    currentBid -= BID_STEP;
+  const step = getBidStep();
+  if (currentBid - step >= BASE_PRICE) {
+    currentBid -= step;
     updateBidUI();
   }
 };
 
 function updateBidUI() {
   priceEl.textContent = `₹${currentBid}`;
+  const step = getBidStep();
+  minusBtn.textContent = `−${step}`;
+  plusBtn.textContent = `+${step}`;
 }
 
 /* ================= TEAMS ================= */
@@ -522,6 +552,7 @@ window.editTeamName = (id) => {
     team.name = newName.trim();
     renderTeams();
     saveState();
+    saveStateToServer();
   }
 };
 
@@ -537,12 +568,15 @@ soldBtn.onclick = () => {
   saveUndoState(); // Save state before making changes
   const team = teams[selectedTeamId];
   team.budget -= currentBid;
-  team.players.push(currentPlayer);
+  // Clone the player object to preserve all properties including card
+  team.players.push(JSON.parse(JSON.stringify(currentPlayer)));
 
   showStamp("sold");
   soldSound.play();
 
+  currentPlayer = null; // Clear so resume doesn't put sold player back on wheel
   saveState();
+  saveStateToServer();
   finishReveal();
 };
 
@@ -553,22 +587,38 @@ unsoldBtn.onclick = () => {
   showStamp("unsold");
   unsoldSound.play();
 
+  currentPlayer = null; // Clear so resume doesn't put unsold player back on wheel
   saveState();
+  saveStateToServer();
   finishReveal();
 };
 
 /* ================= FINISH ================= */
 function finishReveal() {
+  // Fade out player screen, then fade in next screen
+  revealScreen.classList.remove("fade-in");
+  revealScreen.classList.add("fade-out");
+
   setTimeout(() => {
+    revealScreen.classList.remove("fade-out");
     revealScreen.style.display = "none";
 
     if (!currentPool.length) {
+      // Next: round complete overlay (which later goes to final screen)
       showRoundComplete();
+      // Ensure overlay fades in
+      roundCompleteScreen.classList.remove("fade-out");
+      roundCompleteScreen.classList.add("fade-in");
+      setTimeout(() => roundCompleteScreen.classList.remove("fade-in"), 650);
     } else {
+      // Next: wheel
       wheelSection.style.display = "flex";
+      wheelSection.classList.remove("fade-out");
+      wheelSection.classList.add("fade-in");
       drawWheel();
+      setTimeout(() => wheelSection.classList.remove("fade-in"), 650);
     }
-  }, 1600);
+  }, 650);
 }
 
 /* ================= STAMP ================= */
@@ -608,6 +658,9 @@ function showFinalScreen() {
 
   finalScreen.style.display = "flex";
   finalScreen.style.opacity = "1";
+  finalScreen.classList.remove("fade-out");
+  finalScreen.classList.add("fade-in");
+  setTimeout(() => finalScreen.classList.remove("fade-in"), 650);
 
   finalScreen.innerHTML = `
     <h1>AUCTION ROUND COMPLETE</h1>
@@ -637,17 +690,22 @@ window.startUnsoldAuction = () => {
   finalScreen.style.display = "none";
   currentPool = [...unsoldPlayers];
   unsoldPlayers = [];
+  currentPlayer = null;
+  currentBid = BASE_PRICE;
+  selectedTeamId = null;
   saveState();
+  saveStateToServer();
   wheelSection.style.display = "flex";
   drawWheel();
 };
 
 window.endAuction = () => {
-  localStorage.removeItem("auctionState");
+  // Save state with unsold players before ending (in case user wants to come back)
+  saveState();
+  saveStateToServer();
   finalScreen.innerHTML = `
     <h1>AUCTION ENDED</h1>
-    <button class="btn primary" onclick="showMainMenu()" style="margin-top: 30px;">BACK TO MENU</button>
+    <button class="btn primary" onclick="location.reload()" style="margin-top: 30px;">RESTART</button>
   `;
 };
 
-window.showMainMenu = showMainMenu;

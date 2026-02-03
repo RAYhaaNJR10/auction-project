@@ -562,14 +562,15 @@ body::before {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background: #000;
 }
 
 #revealScreen.sold-bg {
-  background: radial-gradient(circle, rgba(0,255,140,0.35), rgba(0,70,25,0.95));
+  background: #000;
 }
 
 #revealScreen.unsold-bg {
-  background: radial-gradient(circle, rgba(255,70,70,0.35), rgba(80,0,0,0.95));
+  background: #000;
 }
 
 #playerVideo {
@@ -1180,10 +1181,23 @@ body::before {
 }
 
 .team.active {
-  background: #ffcc00;
-  color: black;
+  background: #ffcc00 !important;
+  color: #000 !important;
   font-weight: 900;
   box-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
+}
+
+.team.active * {
+  color: #000 !important;
+}
+
+.team.active .team-name,
+.team.active .team-header,
+.team.active .team-info,
+.team.active .team-info div,
+.team.active .player-count,
+.team.active .budget {
+  color: #000 !important;
 }
 
 .team-header {

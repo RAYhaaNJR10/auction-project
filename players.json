@@ -1,18 +1,402 @@
 [
   {
-    "id": 1,
-    "name": "LMarquinhos",
-    "position": "CB",
-    "rating": 86,
+    "id": 3,
+    "name": "ADISH",
+    "position": "MF",
+    "rating": 75,
     "video": "",
-    "card": "cards/marquinhostestcard.png"
+    "card": "cards/adish.jpeg"
   },
   {
-    "id": 2,
-    "name": "Messi",
-    "position": "CF",
-    "rating": 93,
+    "id": 4,
+    "name": "AHMED",
+    "position": "FW",
+    "rating": 78,
     "video": "",
-    "card": "cards/messitestcard.png"
+    "card": "cards/Ahmed.jpeg"
+  },
+  {
+    "id": 5,
+    "name": "AKASH J",
+    "position": "DF",
+    "rating": 72,
+    "video": "",
+    "card": "cards/AKASH J.jpeg"
+  },
+  {
+    "id": 6,
+    "name": "AKASH",
+    "position": "MF",
+    "rating": 74,
+    "video": "",
+    "card": "cards/AKASH.jpeg"
+  },
+  {
+    "id": 7,
+    "name": "ALEN",
+    "position": "FW",
+    "rating": 76,
+    "video": "",
+    "card": "cards/ALEN.jpeg"
+  },
+  {
+    "id": 8,
+    "name": "AMAN",
+    "position": "MF",
+    "rating": 73,
+    "video": "",
+    "card": "cards/AMAN.jpeg"
+  },
+  {
+    "id": 9,
+    "name": "AMBADI",
+    "position": "DF",
+    "rating": 71,
+    "video": "",
+    "card": "cards/AMBADI.jpeg"
+  },
+  {
+    "id": 10,
+    "name": "ASHWIN",
+    "position": "MF",
+    "rating": 75,
+    "video": "",
+    "card": "cards/ASHWIN.jpeg"
+  },
+  {
+    "id": 11,
+    "name": "ATHUL",
+    "position": "FW",
+    "rating": 77,
+    "video": "",
+    "card": "cards/ATHUL.jpeg"
+  },
+  {
+    "id": 12,
+    "name": "BALU",
+    "position": "DF",
+    "rating": 72,
+    "video": "",
+    "card": "cards/BALU.jpeg"
+  },
+  {
+    "id": 13,
+    "name": "BK",
+    "position": "MF",
+    "rating": 74,
+    "video": "",
+    "card": "cards/BK.jpeg"
+  },
+  {
+    "id": 14,
+    "name": "DEV",
+    "position": "FW",
+    "rating": 76,
+    "video": "",
+    "card": "cards/DEV.jpeg"
+  },
+  {
+    "id": 15,
+    "name": "FAHAD",
+    "position": "MF",
+    "rating": 75,
+    "video": "",
+    "card": "cards/FAHAD.jpeg"
+  },
+  {
+    "id": 16,
+    "name": "FARSIN",
+    "position": "DF",
+    "rating": 73,
+    "video": "",
+    "card": "cards/FARSIN.jpeg"
+  },
+  {
+    "id": 17,
+    "name": "GHANASHYAM",
+    "position": "FW",
+    "rating": 78,
+    "video": "",
+    "card": "cards/GHANASHYAM.jpeg"
+  },
+  {
+    "id": 18,
+    "name": "HADI",
+    "position": "MF",
+    "rating": 74,
+    "video": "",
+    "card": "cards/hadi.jpeg"
+  },
+  {
+    "id": 19,
+    "name": "HARRY",
+    "position": "FW",
+    "rating": 77,
+    "video": "",
+    "card": "cards/HARRY.jpeg"
+  },
+  {
+    "id": 20,
+    "name": "IRSHAD",
+    "position": "DF",
+    "rating": 72,
+    "video": "",
+    "card": "cards/irshad.jpeg"
+  },
+  {
+    "id": 21,
+    "name": "JOHNSTON",
+    "position": "MF",
+    "rating": 75,
+    "video": "",
+    "card": "cards/JOHNSTON.jpeg"
+  },
+  {
+    "id": 22,
+    "name": "KRISHNA",
+    "position": "FW",
+    "rating": 76,
+    "video": "",
+    "card": "cards/krishna.jpeg"
+  },
+  {
+    "id": 23,
+    "name": "LAMIH",
+    "position": "DF",
+    "rating": 73,
+    "video": "",
+    "card": "cards/LAMIH.jpeg"
+  },
+  {
+    "id": 24,
+    "name": "MADHAV",
+    "position": "MF",
+    "rating": 74,
+    "video": "",
+    "card": "cards/MADHAV.jpeg"
+  },
+  {
+    "id": 25,
+    "name": "MALIK",
+    "position": "FW",
+    "rating": 77,
+    "video": "",
+    "card": "cards/MALIK.jpeg"
+  },
+  {
+    "id": 26,
+    "name": "MARTINE",
+    "position": "DF",
+    "rating": 72,
+    "video": "",
+    "card": "cards/MARTINE.jpeg"
+  },
+  {
+    "id": 27,
+    "name": "MOHAMMED",
+    "position": "MF",
+    "rating": 75,
+    "video": "",
+    "card": "cards/mohammed.jpeg"
+  },
+  {
+    "id": 28,
+    "name": "NAVANEETH",
+    "position": "FW",
+    "rating": 76,
+    "video": "",
+    "card": "cards/navaneeth.jpeg"
+  },
+  {
+    "id": 29,
+    "name": "NAVEED",
+    "position": "DF",
+    "rating": 73,
+    "video": "",
+    "card": "cards/NAVEED.jpeg"
+  },
+  {
+    "id": 30,
+    "name": "NEERAJ (AR)",
+    "position": "MF",
+    "rating": 74,
+    "video": "",
+    "card": "cards/NEERAJ (AR).jpeg"
+  },
+  {
+    "id": 31,
+    "name": "NEERAJ",
+    "position": "FW",
+    "rating": 77,
+    "video": "",
+    "card": "cards/NEERAJ.jpeg"
+  },
+  {
+    "id": 32,
+    "name": "NEIL",
+    "position": "DF",
+    "rating": 72,
+    "video": "",
+    "card": "cards/NEIL.jpeg"
+  },
+  {
+    "id": 33,
+    "name": "NIHAL",
+    "position": "MF",
+    "rating": 75,
+    "video": "",
+    "card": "cards/NIHAL.jpeg"
+  },
+  {
+    "id": 34,
+    "name": "NIRANJAN",
+    "position": "FW",
+    "rating": 76,
+    "video": "",
+    "card": "cards/NIRANJAN.jpeg"
+  },
+  {
+    "id": 35,
+    "name": "PRANAV",
+    "position": "DF",
+    "rating": 73,
+    "video": "",
+    "card": "cards/PRANAV.jpeg"
+  },
+  {
+    "id": 36,
+    "name": "RAYHAAN",
+    "position": "MF",
+    "rating": 74,
+    "video": "",
+    "card": "cards/RAYHAAN.jpeg"
+  },
+  {
+    "id": 37,
+    "name": "ROBIN",
+    "position": "FW",
+    "rating": 77,
+    "video": "",
+    "card": "cards/ROBIN.jpeg"
+  },
+  {
+    "id": 38,
+    "name": "ROSHAN",
+    "position": "DF",
+    "rating": 72,
+    "video": "",
+    "card": "cards/ROSHAN.jpeg"
+  },
+  {
+    "id": 39,
+    "name": "RUSSEL",
+    "position": "MF",
+    "rating": 75,
+    "video": "",
+    "card": "cards/RUSSEL.jpeg"
+  },
+  {
+    "id": 40,
+    "name": "SANJAY",
+    "position": "FW",
+    "rating": 76,
+    "video": "",
+    "card": "cards/SANJAY.jpeg"
+  },
+  {
+    "id": 41,
+    "name": "SOURAV",
+    "position": "DF",
+    "rating": 73,
+    "video": "",
+    "card": "cards/sourav.jpeg"
+  },
+  {
+    "id": 42,
+    "name": "SREERAJ",
+    "position": "MF",
+    "rating": 74,
+    "video": "",
+    "card": "cards/sreeraj.jpeg"
+  },
+  {
+    "id": 43,
+    "name": "SREESHANTH",
+    "position": "FW",
+    "rating": 77,
+    "video": "",
+    "card": "cards/SREESHANTH.jpeg"
+  },
+  {
+    "id": 44,
+    "name": "SUBRU",
+    "position": "DF",
+    "rating": 72,
+    "video": "",
+    "card": "cards/SUBRU.jpeg"
+  },
+  {
+    "id": 45,
+    "name": "TEJAS",
+    "position": "MF",
+    "rating": 75,
+    "video": "",
+    "card": "cards/TEJAS.jpeg"
+  },
+  {
+    "id": 46,
+    "name": "VAISHNAV",
+    "position": "FW",
+    "rating": 76,
+    "video": "",
+    "card": "cards/VAISHNAV.jpeg"
+  },
+  {
+    "id": 47,
+    "name": "VIDHU",
+    "position": "DF",
+    "rating": 73,
+    "video": "",
+    "card": "cards/VIDHU.jpeg"
+  },
+  {
+    "id": 48,
+    "name": "VINAYAK",
+    "position": "MF",
+    "rating": 74,
+    "video": "",
+    "card": "cards/VINAYAK.jpeg"
+  },
+  {
+    "id": 49,
+    "name": "ZAHAN",
+    "position": "FW",
+    "rating": 77,
+    "video": "",
+    "card": "cards/zahan.jpeg"
+  },
+  {
+    "id": 50,
+    "name": "EBIN",
+    "position": "MF",
+    "rating": 75,
+    "video": "",
+    "card": "cards/EBIN.jpeg"
+  },
+  {
+    "id": 51,
+    "name": "SHAMIL",
+    "position": "FW",
+    "rating": 76,
+    "video": "",
+    "card": "cards/SHAMIL.jpeg"
+  },
+  {
+    "id": 52,
+    "name": "KEDAR",
+    "position": "DF",
+    "rating": 74,
+    "video": "",
+    "card": "cards/KEDAR.jpeg"
   }
 ]
