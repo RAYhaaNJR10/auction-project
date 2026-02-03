@@ -1128,9 +1128,43 @@ body::before {
 /* ================================================================= */
 
 #decisionButtons {
-  margin-top: 40px;
+  position: fixed;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
-  gap: 40px;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 0;
+  z-index: 1100;
+}
+
+#decisionButtons .btn {
+  padding: 18px 64px;
+  font-size: 20px;
+  border-radius: 32px;
+}
+
+/* remove old offset; fixed positioning handles visibility */
+
+#decisionButtons .btn {
+  min-width: 210px;
+}
+
+#resultMessage {
+  margin-top: 10px;
+  max-width: 760px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  color: #E5E7EB;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  min-height: 24px; /* keeps space even when empty */
 }
 
 
@@ -1164,6 +1198,8 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .team {

@@ -18,6 +18,7 @@ const card = document.getElementById("playerCard");
 const nameFallback = document.getElementById("playerNameFallback");
 const priceEl = document.getElementById("currentPrice");
 const stamp = document.getElementById("stamp");
+const resultMessage = document.getElementById("resultMessage");
 const teamSidebar = document.getElementById("teamSidebar");
 
 const resumeOverlay = document.getElementById("resumeOverlay");
@@ -96,6 +97,8 @@ let teams = [
   { id: 3, name: "Team D", budget: 1500, players: [] },
   { id: 4, name: "Team E", budget: 1500, players: [] },
   { id: 5, name: "Team F", budget: 1500, players: [] },
+  { id: 6, name: "Team G", budget: 1500, players: [] },
+  { id: 7, name: "Team H", budget: 1500, players: [] },
 ];
 
 /* ================= UNDO HISTORY ================= */
@@ -481,6 +484,10 @@ function selectPlayer() {
   updateBidUI(); // This will update button labels
   renderTeams();
 
+  // Clear any previous result message/stamp
+  if (resultMessage) resultMessage.textContent = "";
+  stamp.className = "";
+
   if (currentPlayer.card) {
     card.src = currentPlayer.card;
     card.style.display = "block";
@@ -567,65 +574,103 @@ soldBtn.onclick = () => {
 
   saveUndoState(); // Save state before making changes
   const team = teams[selectedTeamId];
+  const soldPlayer = currentPlayer;
+  const soldPrice = currentBid;
   team.budget -= currentBid;
   // Clone the player object to preserve all properties including card
   team.players.push(JSON.parse(JSON.stringify(currentPlayer)));
 
   showStamp("sold");
   soldSound.play();
+  fadeOutAudio(soldSound, 4000);
+
+  if (resultMessage) {
+    resultMessage.textContent = `${(soldPlayer?.name || "PLAYER").toUpperCase()} SOLD TO ${(team?.name || "TEAM").toUpperCase()} FOR ₹${soldPrice}`;
+  }
 
   currentPlayer = null; // Clear so resume doesn't put sold player back on wheel
   saveState();
   saveStateToServer();
-  finishReveal();
+  finishReveal(4000);
 };
 
 unsoldBtn.onclick = () => {
   saveUndoState(); // Save state before making changes
+  const unsoldPlayer = currentPlayer;
   unsoldPlayers.push(currentPlayer);
 
   showStamp("unsold");
   unsoldSound.play();
+  fadeOutAudio(unsoldSound, 4000);
+
+  if (resultMessage) {
+    resultMessage.textContent = `${(unsoldPlayer?.name || "PLAYER").toUpperCase()} UNSOLD`;
+  }
 
   currentPlayer = null; // Clear so resume doesn't put unsold player back on wheel
   saveState();
   saveStateToServer();
-  finishReveal();
+  finishReveal(4000);
 };
 
 /* ================= FINISH ================= */
-function finishReveal() {
-  // Fade out player screen, then fade in next screen
-  revealScreen.classList.remove("fade-in");
-  revealScreen.classList.add("fade-out");
-
+function finishReveal(holdMs = 1600) {
+  // Hold the reveal screen (stamp/message) then fade out and switch screens
   setTimeout(() => {
-    revealScreen.classList.remove("fade-out");
-    revealScreen.style.display = "none";
+    revealScreen.classList.remove("fade-in");
+    revealScreen.classList.add("fade-out");
 
-    if (!currentPool.length) {
-      // Next: round complete overlay (which later goes to final screen)
-      showRoundComplete();
-      // Ensure overlay fades in
-      roundCompleteScreen.classList.remove("fade-out");
-      roundCompleteScreen.classList.add("fade-in");
-      setTimeout(() => roundCompleteScreen.classList.remove("fade-in"), 650);
-    } else {
-      // Next: wheel
-      wheelSection.style.display = "flex";
-      wheelSection.classList.remove("fade-out");
-      wheelSection.classList.add("fade-in");
-      drawWheel();
-      setTimeout(() => wheelSection.classList.remove("fade-in"), 650);
-    }
-  }, 650);
+    setTimeout(() => {
+      revealScreen.classList.remove("fade-out");
+      revealScreen.style.display = "none";
+
+      if (!currentPool.length) {
+        // Next: round complete overlay (which later goes to final screen)
+        showRoundComplete();
+        // Ensure overlay fades in
+        roundCompleteScreen.classList.remove("fade-out");
+        roundCompleteScreen.classList.add("fade-in");
+        setTimeout(() => roundCompleteScreen.classList.remove("fade-in"), 650);
+      } else {
+        // Next: wheel
+        wheelSection.style.display = "flex";
+        wheelSection.classList.remove("fade-out");
+        wheelSection.classList.add("fade-in");
+        drawWheel();
+        setTimeout(() => wheelSection.classList.remove("fade-in"), 650);
+      }
+    }, 650);
+  }, holdMs);
 }
 
 /* ================= STAMP ================= */
 function showStamp(type) {
   stamp.innerText = type.toUpperCase();
   stamp.className = `show ${type}`;
-  setTimeout(() => stamp.className = "", 1200);
+  setTimeout(() => stamp.className = "", 4000);
+}
+
+/* ================= AUDIO FADE ================= */
+function fadeOutAudio(audioEl, durationMs = 4000) {
+  try {
+    const startVol = typeof audioEl.volume === "number" ? audioEl.volume : 1;
+    const steps = 30;
+    const stepMs = Math.max(16, Math.floor(durationMs / steps));
+    let i = 0;
+    const timer = setInterval(() => {
+      i += 1;
+      const t = i / steps;
+      audioEl.volume = Math.max(0, startVol * (1 - t));
+      if (i >= steps) {
+        clearInterval(timer);
+        audioEl.pause();
+        audioEl.currentTime = 0;
+        audioEl.volume = startVol;
+      }
+    }, stepMs);
+  } catch {
+    // ignore audio fade errors
+  }
 }
 
 /* ================= ROUND COMPLETE ================= */
