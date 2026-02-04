@@ -104,14 +104,6 @@
     "card": "cards/FAHAD.jpeg"
   },
   {
-    "id": 16,
-    "name": "FARSIN",
-    "position": "DF",
-    "rating": 73,
-    "video": "",
-    "card": "cards/FARSIN.jpeg"
-  },
-  {
     "id": 17,
     "name": "GHANASHYAM",
     "position": "FW",
@@ -368,14 +360,6 @@
     "card": "cards/VINAYAK.jpeg"
   },
   {
-    "id": 49,
-    "name": "ZAHAN",
-    "position": "FW",
-    "rating": 77,
-    "video": "",
-    "card": "cards/zahan.jpeg"
-  },
-  {
     "id": 50,
     "name": "EBIN",
     "position": "MF",
@@ -398,5 +382,13 @@
     "rating": 74,
     "video": "",
     "card": "cards/KEDAR.jpeg"
+  },
+  {
+    "id": 53,
+    "name": "NEJAD",
+    "position": "MF",
+    "rating": 75,
+    "video": "",
+    "card": "cards/NEJAD.jpeg"
   }
 ]

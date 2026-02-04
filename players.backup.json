@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "TEST PLAYER 1",
+    "position": "FW",
+    "rating": 99,
+    "video": "",
+    "card": ""
+  },
+  {
+    "id": 2,
+    "name": "TEST PLAYER 2",
+    "position": "GK",
+    "rating": 99,
+    "video": "",
+    "card": ""
+  }
+]

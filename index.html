@@ -1,70 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Football Auction</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<!-- WHEEL SCREEN -->
-<div id="wheelSection">
-  <h1>FOOTBALL PLAYER AUCTION</h1>
-  <div id="finalBanner">FINAL PICKS</div>
+  <!-- WHEEL SCREEN -->
+  <div id="wheelSection">
+    <h1>FOOTBALL PLAYER AUCTION</h1>
+    <div id="finalBanner">FINAL PICKS</div>
 
-  <div class="wheel-container">
-    <div class="pointer">▼</div>
-    <canvas id="wheel" width="500" height="500"></canvas>
-  </div>
-
-  <button id="spinBtn" class="btn primary">SPIN</button>
-</div>
-
-<button id="undoBtn" class="btn warning">UNDO</button>
-
-<!-- REVEAL SCREEN -->
-<div id="revealScreen">
-  <div id="teamSidebar"></div>
-
-  <div class="reveal-center">
-    <img id="playerCard">
-    <div id="playerNameFallback"></div>
-
-    <div id="auctionControls">
-      <button id="minusBtn">−50</button>
-      <span id="currentPrice">₹50</span>
-      <button id="plusBtn">+50</button>
+    <div class="wheel-container">
+      <div class="pointer">▼</div>
+      <canvas id="wheel" width="500" height="500"></canvas>
     </div>
 
-    <div id="stamp"></div>
-    <div id="resultMessage"></div>
+    <button id="spinBtn" class="btn primary">SPIN</button>
+    <button id="viewTeamsBtn" class="btn secondary" style="margin-top: 20px;">VIEW TEAMS</button>
+  </div>
 
-    <div id="decisionButtons">
-      <button id="unsoldBtn" class="btn danger">UNSOLD</button>
-      <button id="soldBtn" class="btn success">SOLD</button>
+  <button id="undoBtn" class="btn warning">UNDO</button>
+
+  <!-- REVEAL SCREEN -->
+  <div id="revealScreen">
+    <div id="teamSidebar"></div>
+
+    <div class="reveal-center">
+      <img id="playerCard">
+      <div id="playerNameFallback"></div>
+
+      <div id="auctionControls">
+        <button id="minusBtn">−50</button>
+        <span id="currentPrice">₹50</span>
+        <button id="plusBtn">+50</button>
+      </div>
+
+      <div id="stamp"></div>
+      <div id="resultMessage"></div>
+
+      <div id="decisionButtons">
+        <button id="unsoldBtn" class="btn danger">UNSOLD</button>
+        <button id="soldBtn" class="btn success">SOLD</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- ROUND COMPLETE OVERLAY -->
-<div id="roundCompleteScreen">
-  <div class="round-complete-text">ROUND COMPLETED</div>
-</div>
-
-<!-- FINAL SCREEN -->
-<div id="finalScreen"></div>
-
-
-<!-- RESUME POPUP -->
-<div id="resumeOverlay">
-  <div id="resumeBox">
-    <h2>Previous auction detected</h2>
-    <p>Do you want to resume?</p>
-    <button id="resumeYes" class="btn success">RESUME</button>
-    <button id="resumeNo" class="btn danger">START FRESH</button>
+  <!-- ROUND COMPLETE OVERLAY -->
+  <div id="roundCompleteScreen">
+    <div class="round-complete-text">ROUND COMPLETED</div>
   </div>
-</div>
 
-<script src="script.js"></script>
+  <!-- FINAL SCREEN -->
+  <div id="finalScreen"></div>
+
+
+  <!-- TEAMS PAGE -->
+  <div id="teamsPage">
+    <div class="teams-header">
+      <h1>TEAMS</h1>
+      <button id="backToWheelBtn" class="btn warning">BACK</button>
+    </div>
+    <div id="teamsList"></div>
+  </div>
+
+  <!-- TEAM DETAIL PAGE -->
+  <div id="teamDetailPage">
+    <div class="team-detail-header">
+      <h1 id="teamDetailTitle">TEAM NAME</h1>
+      <button id="backToTeamsBtn" class="btn warning">BACK</button>
+    </div>
+    <div id="teamPlayersGrid"></div>
+  </div>
+
+  <!-- RESUME POPUP -->
+  <div id="resumeOverlay">
+    <div id="resumeBox">
+      <h2>Previous auction detected</h2>
+      <p>Do you want to resume?</p>
+      <button id="resumeYes" class="btn success">RESUME</button>
+      <button id="resumeNo" class="btn danger">START FRESH</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
+
 </html>

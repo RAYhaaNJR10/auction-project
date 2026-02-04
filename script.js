@@ -18,47 +18,11 @@ const card = document.getElementById("playerCard");
 const nameFallback = document.getElementById("playerNameFallback");
 const priceEl = document.getElementById("currentPrice");
 const stamp = document.getElementById("stamp");
-const resultMessage = document.getElementById("resultMessage");
 const teamSidebar = document.getElementById("teamSidebar");
 
 const resumeOverlay = document.getElementById("resumeOverlay");
 const resumeYes = document.getElementById("resumeYes");
 const resumeNo = document.getElementById("resumeNo");
-const undoBtn = document.getElementById("undoBtn");
-
-// Navigation (teams page removed)
-
-/* ================= SERVER BACKUP (safety layer, not replacement for localStorage) ================= */
-const SERVER_BASE_URL = 'http://localhost:4000';
-let serverBackupState = null;
-
-async function saveStateToServer() {
-  try {
-    const payload = { currentPool, unsoldPlayers, teams };
-    await fetch(`${SERVER_BASE_URL}/save-state`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-  } catch (err) {
-    console.warn('Server backup failed', err);
-  }
-}
-
-async function tryLoadServerBackup() {
-  try {
-    const res = await fetch(`${SERVER_BASE_URL}/load-state`);
-    if (!res.ok) return false;
-    const { state } = await res.json();
-    if (state) {
-      serverBackupState = state;
-      return true;
-    }
-  } catch (err) {
-    console.warn('Server backup fetch failed', err);
-  }
-  return false;
-}
 
 /* ================= AUDIO ================= */
 const spinSound = new Audio("sounds/spin.mp3");
@@ -70,12 +34,8 @@ bgMusic.loop = true;
 
 /* ================= CONFIG ================= */
 const BASE_PRICE = 50;
+const BID_STEP = 50;
 const MAX_PLAYERS_PER_TEAM = 6;
-
-// Dynamic bid step: 25 until 400, then 50
-function getBidStep() {
-  return currentBid < 400 ? 25 : 50;
-}
 
 /* ================= STATE ================= */
 let players = [];
@@ -91,18 +51,15 @@ let currentPlayer = null;
 
 /* ================= TEAMS ================= */
 let teams = [
-  { id: 0, name: "Team A", budget: 1500, players: [] },
-  { id: 1, name: "Team B", budget: 1500, players: [] },
-  { id: 2, name: "Team C", budget: 1500, players: [] },
-  { id: 3, name: "Team D", budget: 1500, players: [] },
-  { id: 4, name: "Team E", budget: 1500, players: [] },
-  { id: 5, name: "Team F", budget: 1500, players: [] },
-  { id: 6, name: "Team G", budget: 1500, players: [] },
-  { id: 7, name: "Team H", budget: 1500, players: [] },
+  { id: 0, name: "ADAPRADHAMAN MADRID", budget: 1500, players: [], logo: "logos/ADAPRADHAMAN MADRID.jpeg" },
+  { id: 1, name: "AVIYAL CITY FC", budget: 1500, players: [], logo: "logos/AVIYAL CITY FC.jpeg" },
+  { id: 2, name: "PACHADI BLASTERS", budget: 1500, players: [], logo: "logos/PACHADI BLASTERS.jpeg" },
+  { id: 3, name: "PALADA FC", budget: 1500, players: [], logo: "logos/PALADA FC.jpeg" },
+  { id: 4, name: "PAZHAM UNITED FC", budget: 1500, players: [], logo: "logos/PAZHAM UNITED FC.jpeg" },
+  { id: 5, name: "PULIYINJI FC", budget: 1500, players: [], logo: "logos/PULIYINJI FC.jpeg" },
+  { id: 6, name: "SAMBAR CITY FC", budget: 1500, players: [], logo: "logos/SAMBAR CITY FC.jpeg" },
+  { id: 7, name: "SPORTING ERISSERY", budget: 1500, players: [], logo: "logos/SPORTING ERISSERY.jpeg" },
 ];
-
-/* ================= UNDO HISTORY ================= */
-let undoHistory = [];
 
 /* ================= SAVE / LOAD ================= */
 function saveState() {
@@ -110,321 +67,87 @@ function saveState() {
     currentPool,
     unsoldPlayers,
     teams,
-    currentPlayer: currentPlayer ? JSON.parse(JSON.stringify(currentPlayer)) : null,
-    currentBid,
-    selectedTeamId
+    rotation
   }));
 }
-
-/* ================= UNDO ================= */
-function saveUndoState() {
-  undoHistory.push({
-    currentPool: JSON.parse(JSON.stringify(currentPool)),
-    unsoldPlayers: JSON.parse(JSON.stringify(unsoldPlayers)),
-    teams: JSON.parse(JSON.stringify(teams)),
-    rotation,
-    currentBid,
-    selectedTeamId,
-    currentPlayer: currentPlayer ? JSON.parse(JSON.stringify(currentPlayer)) : null
-  });
-}
-
-function undo() {
-  if (undoHistory.length === 0) {
-    alert("Nothing to undo!");
-    return;
-  }
-  
-  const state = undoHistory.pop();
-  currentPool = state.currentPool;
-  unsoldPlayers = state.unsoldPlayers;
-  teams = state.teams;
-  rotation = state.rotation;
-  currentBid = state.currentBid;
-  selectedTeamId = state.selectedTeamId;
-  currentPlayer = state.currentPlayer;
-  
-  saveState();
-  saveStateToServer();
-  
-  // Return to wheel if we're not in reveal screen
-  if (revealScreen.style.display !== "flex") {
-    wheelSection.style.display = "flex";
-    drawWheel();
-  } else {
-    // If we're in reveal screen, restore the player card display
-    if (currentPlayer) {
-      if (currentPlayer.card) {
-        card.src = currentPlayer.card;
-        card.style.display = "block";
-        nameFallback.style.display = "none";
-      } else {
-        card.style.display = "none";
-        nameFallback.innerText = currentPlayer.name;
-        nameFallback.style.display = "block";
-      }
-    }
-    renderTeams();
-    updateBidUI();
-  }
-}
-
-undoBtn.onclick = () => {
-  undo();
-};
 
 function loadState() {
   const s = localStorage.getItem("auctionState");
   if (!s) return false;
 
   const state = JSON.parse(s);
-  currentPool = state.currentPool || [];
-  unsoldPlayers = state.unsoldPlayers || [];
-  teams = state.teams || teams;
-  currentPlayer = state.currentPlayer || null;
-  currentBid = state.currentBid || BASE_PRICE;
-  selectedTeamId = state.selectedTeamId || null;
-  undoHistory = []; // Clear undo history when loading saved state
+  currentPool = state.currentPool;
+  unsoldPlayers = state.unsoldPlayers;
+  teams = state.teams;
+  rotation = state.rotation || 0;
   return true;
 }
-
-/* ================= NAVIGATION ================= */
-function showAuction() {
-  // Check if we're coming back from final screen with unsold players
-  const state = localStorage.getItem("auctionState");
-  if (state) {
-    const parsedState = JSON.parse(state);
-    // If currentPool is empty but unsoldPlayers exist, show option for unsold auction
-    if ((!parsedState.currentPool || parsedState.currentPool.length === 0) && 
-        parsedState.unsoldPlayers && parsedState.unsoldPlayers.length > 0) {
-      resumeOverlay.style.display = "flex";
-      resumeOverlay.innerHTML = `
-        <div id="resumeBox">
-          <h2>Unsold Players Available</h2>
-          <p>There are ${parsedState.unsoldPlayers.length} unsold players. Would you like to conduct an auction with them?</p>
-          <div class="resume-actions">
-            <button id="resumeYes" class="btn success">YES, START UNSOLD AUCTION</button>
-            <button id="resumeNo" class="btn danger">NO, BACK TO MENU</button>
-          </div>
-        </div>
-      `;
-      
-      document.getElementById("resumeYes").onclick = () => {
-        loadState();
-        currentPool = [...unsoldPlayers];
-        unsoldPlayers = [];
-        currentPlayer = null;
-        currentBid = BASE_PRICE;
-        selectedTeamId = null;
-        saveState();
-        saveStateToServer();
-        resumeOverlay.style.display = "none";
-        hideAllPages();
-        wheelSection.style.display = "flex";
-        drawWheel();
-      };
-      
-      document.getElementById("resumeNo").onclick = () => {
-        // Reset everything when starting fresh
-        localStorage.removeItem("auctionState");
-        currentPool = [...players];
-        unsoldPlayers = [];
-        teams.forEach(team => {
-          team.players = [];
-          team.budget = 1500;
-        });
-        currentPlayer = null;
-        currentBid = BASE_PRICE;
-        selectedTeamId = null;
-        resumeOverlay.style.display = "none";
-        hideAllPages();
-        wheelSection.style.display = "flex";
-        drawWheel();
-      };
-      return;
-    }
-  }
-  
-  // Normal resume check
-  if (localStorage.getItem("auctionState")) {
-    resumeOverlay.style.display = "flex";
-    resumeYes.onclick = () => {
-      loadState();
-      resumeOverlay.style.display = "none";
-      hideAllPages(); // Hide all pages first
-      // Always go back to wheel screen when resuming, put currentPlayer back in pool if exists
-      if (currentPlayer) {
-        // Put the current player back in the pool
-        currentPool.push(currentPlayer);
-        currentPlayer = null;
-        currentBid = BASE_PRICE;
-        selectedTeamId = null;
-        saveState();
-        saveStateToServer();
-      }
-      wheelSection.style.display = "flex";
-      drawWheel();
-    };
-    resumeNo.onclick = () => {
-      localStorage.removeItem("auctionState");
-      currentPool = [...players];
-      unsoldPlayers = [];
-      // Reset all teams to initial state
-      teams.forEach(team => {
-        team.players = [];
-        team.budget = 1500;
-      });
-      currentPlayer = null;
-      currentBid = BASE_PRICE;
-      selectedTeamId = null;
-      resumeOverlay.style.display = "none";
-      hideAllPages();
-      wheelSection.style.display = "flex";
-      drawWheel();
-    };
-  } else {
-    hideAllPages();
-    wheelSection.style.display = "flex";
-    drawWheel();
-  }
-}
-
-function hideAllPages() {
-  wheelSection.style.display = "none";
-  revealScreen.style.display = "none";
-  finalScreen.style.display = "none";
-  roundCompleteScreen.style.display = "none";
-}
-
-// Navigation event listeners (removed teams page)
 
 /* ================= INIT ================= */
 fetch("players.json")
   .then(r => r.json())
-  .then(async data => {
+  .then(data => {
     players = [...data];
 
-    // Load state: localStorage first, then server backup fallback
     if (localStorage.getItem("auctionState")) {
-      loadState();
-    } else if (await tryLoadServerBackup()) {
-      const state = serverBackupState;
-      currentPool = state.currentPool || [];
-      unsoldPlayers = state.unsoldPlayers || [];
-      teams = state.teams || teams;
-      const resumeFromServer = confirm("Server backup found. Resume auction?");
-      if (!resumeFromServer) {
+      resumeOverlay.style.display = "flex";
+
+      resumeYes.onclick = () => {
+        loadState();
+        resumeOverlay.style.display = "none";
+        wheelSection.style.display = "flex";
+        drawWheel();
+      };
+
+      resumeNo.onclick = () => {
+        localStorage.removeItem("auctionState");
         currentPool = [...players];
         unsoldPlayers = [];
-        teams.forEach(t => { t.players = []; t.budget = 1500; });
-      }
-      // If Yes: state already in memory; saveState will run on next SOLD/UNSOLD
+        resumeOverlay.style.display = "none";
+        wheelSection.style.display = "flex";
+        drawWheel();
+      };
     } else {
       currentPool = [...players];
+      wheelSection.style.display = "flex";
+      drawWheel();
     }
-    
-    // Start directly with auction
-    showAuction();
-    // Initialize button labels
-    updateBidUI();
   });
 
 /* ================= WHEEL ================= */
 function drawWheel() {
+  if (!currentPool.length) return;
+
   const r = canvas.width / 2;
   const slice = (2 * Math.PI) / currentPool.length;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Draw outer glow ring (subtle for dark theme)
-  ctx.save();
-  ctx.translate(r, r);
-  ctx.beginPath();
-  ctx.arc(0, 0, r + 5, 0, 2 * Math.PI);
-  const gradient = ctx.createRadialGradient(0, 0, r - 20, 0, 0, r + 5);
-  gradient.addColorStop(0, "rgba(167, 139, 250, 0.1)");
-  gradient.addColorStop(1, "rgba(167, 139, 250, 0)");
-  ctx.fillStyle = gradient;
-  ctx.fill();
-  ctx.restore();
-
   ctx.save();
   ctx.translate(r, r);
   ctx.rotate(rotation);
 
-  // Dark theme color palette
-  const colors = [
-    ["#7C3AED", "#6B46C1"], // Deep Purple
-    ["#10B981", "#059669"], // Emerald Green
-    ["#EC4899", "#DB2777"], // Rose Pink
-    ["#F59E0B", "#D97706"], // Amber
-    ["#6366F1", "#4F46E5"], // Indigo
-    ["#14B8A6", "#0D9488"], // Teal
-    ["#F97316", "#EA580C"], // Orange
-    ["#8B5CF6", "#7C3AED"], // Violet
-  ];
-
   currentPool.forEach((p, i) => {
-    const colorPair = colors[i % colors.length];
-    const isHighlighted = i === highlightIndex;
-    
-    // Create gradient for each slice
-    const sliceGradient = ctx.createLinearGradient(
-      Math.cos(slice * i + slice / 2) * r * 0.3,
-      Math.sin(slice * i + slice / 2) * r * 0.3,
-      Math.cos(slice * i + slice / 2) * r * 1.2,
-      Math.sin(slice * i + slice / 2) * r * 1.2
-    );
-    
-    if (isHighlighted) {
-      sliceGradient.addColorStop(0, "#A78BFA");
-      sliceGradient.addColorStop(1, "#7C3AED");
-    } else {
-      sliceGradient.addColorStop(0, colorPair[0]);
-      sliceGradient.addColorStop(1, colorPair[1]);
-    }
-
     ctx.beginPath();
-    ctx.fillStyle = sliceGradient;
+    ctx.fillStyle =
+      i === highlightIndex ? "#fff8b0" : i % 2 ? "#d4a017" : "#f5c542";
     ctx.moveTo(0, 0);
     ctx.arc(0, 0, r, slice * i, slice * (i + 1));
     ctx.fill();
 
-    // Add border for each slice
-    ctx.strokeStyle = isHighlighted ? "#A78BFA" : "rgba(167, 139, 250, 0.15)";
-    ctx.lineWidth = isHighlighted ? 2 : 1;
-    ctx.stroke();
+    if (i === highlightIndex) {
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = "gold";
+      ctx.stroke();
+    }
 
-    // Draw player name with better styling
     ctx.save();
     ctx.rotate(slice * i + slice / 2);
     ctx.textAlign = "right";
-    ctx.textBaseline = "middle";
-    
-    // Text shadow for better readability
-    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.font = "bold 18px Arial";
-    ctx.fillText(p.name, r - 15, 2);
-    
-    // Main text
-    ctx.fillStyle = isHighlighted ? "#000" : "#FFF";
-    ctx.font = "bold 18px Arial";
-    ctx.fillText(p.name, r - 15, 0);
-    
+    ctx.fillStyle = "#000";
+    ctx.font = "16px Arial";
+    ctx.fillText(p.name, r - 10, 5);
     ctx.restore();
   });
-
-  // Draw center circle with dark theme gradient
-  ctx.beginPath();
-  ctx.arc(0, 0, 40, 0, 2 * Math.PI);
-  const centerGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 40);
-  centerGradient.addColorStop(0, "#A78BFA");
-  centerGradient.addColorStop(1, "#7C3AED");
-  ctx.fillStyle = centerGradient;
-  ctx.fill();
-  ctx.strokeStyle = "#A78BFA";
-  ctx.lineWidth = 2;
-  ctx.stroke();
 
   ctx.restore();
 }
@@ -433,9 +156,8 @@ function drawWheel() {
 spinBtn.onclick = () => {
   if (spinning) return;
   spinning = true;
-  saveUndoState(); // Save state before spinning
 
-  bgMusic.play().catch(() => {});
+  bgMusic.play().catch(() => { });
   spinSound.currentTime = 0;
   spinSound.play();
 
@@ -472,21 +194,17 @@ function determineWinner() {
 
 /* ================= PLAYER ================= */
 function selectPlayer() {
-  saveUndoState(); // Save state before selecting player
   currentPlayer = currentPool.splice(highlightIndex, 1)[0];
   highlightIndex = null;
 
-  wheelSection.style.display = "none";
-  revealScreen.style.display = "flex";
+  // wheelSection.style.display = "none";
+  // revealScreen.style.display = "flex";
+  transition(wheelSection, revealScreen, "flex");
 
   currentBid = BASE_PRICE;
   selectedTeamId = null;
-  updateBidUI(); // This will update button labels
+  updateBidUI();
   renderTeams();
-
-  // Clear any previous result message/stamp
-  if (resultMessage) resultMessage.textContent = "";
-  stamp.className = "";
 
   if (currentPlayer.card) {
     card.src = currentPlayer.card;
@@ -499,7 +217,7 @@ function selectPlayer() {
   }
 
   cardHitSound.currentTime = 0;
-  cardHitSound.play().catch(() => {});
+  cardHitSound.play();
 }
 
 /* ================= BIDDING ================= */
@@ -510,247 +228,275 @@ plusBtn.onclick = () => {
   const remaining =
     MAX_PLAYERS_PER_TEAM - team.players.length - 1;
   const maxAllowed =
-    team.budget - remaining * 50; // Use 50 as minimum reserve
-  const step = getBidStep();
+    team.budget - remaining * BASE_PRICE;
 
-  if (currentBid + step <= maxAllowed) {
-    currentBid += step;
+  if (currentBid + BID_STEP <= maxAllowed) {
+    currentBid += BID_STEP;
     updateBidUI();
   }
 };
 
 minusBtn.onclick = () => {
-  const step = getBidStep();
-  if (currentBid - step >= BASE_PRICE) {
-    currentBid -= step;
+  if (currentBid - BID_STEP >= BASE_PRICE) {
+    currentBid -= BID_STEP;
     updateBidUI();
   }
 };
 
 function updateBidUI() {
   priceEl.textContent = `₹${currentBid}`;
-  const step = getBidStep();
-  minusBtn.textContent = `−${step}`;
-  plusBtn.textContent = `+${step}`;
 }
 
-/* ================= TEAMS ================= */
+/* ================= NAVIGATION & ANIMATION ================= */
+function transition(fromEl, toEl, type = "flex") {
+  fromEl.classList.add("fade-out");
+  fromEl.classList.remove("fade-in");
+
+  setTimeout(() => {
+    fromEl.style.display = "none";
+    fromEl.classList.remove("fade-out");
+
+    toEl.style.display = type;
+    toEl.classList.add("fade-in");
+    // Clean up fade-in class after animation so it doesn't mess with opacity later if needed
+    setTimeout(() => {
+      toEl.classList.remove("fade-in");
+    }, 600);
+  }, 600); // Wait for fade-out to finish
+}
+
+/* ================= TEAMS UI LOGIC ================= */
+const teamsPage = document.getElementById("teamsPage");
+const teamsList = document.getElementById("teamsList");
+const teamDetailPage = document.getElementById("teamDetailPage");
+const teamDetailTitle = document.getElementById("teamDetailTitle");
+const teamPlayersGrid = document.getElementById("teamPlayersGrid");
+
+const viewTeamsBtn = document.getElementById("viewTeamsBtn");
+const backToWheelBtn = document.getElementById("backToWheelBtn");
+const backToTeamsBtn = document.getElementById("backToTeamsBtn");
+
+// Event Listeners for Navigation
+if (viewTeamsBtn) viewTeamsBtn.onclick = openTeamsPage;
+if (backToWheelBtn) backToWheelBtn.onclick = backToWheel;
+if (backToTeamsBtn) backToTeamsBtn.onclick = backToTeamsFromDetail;
+
+function openTeamsPage() {
+  renderAllTeamsPage();
+  transition(wheelSection, teamsPage, "block");
+}
+
+function backToWheel() {
+  transition(teamsPage, wheelSection, "flex");
+  setTimeout(drawWheel, 600); // Redraw after fade out
+}
+
+function backToTeamsFromDetail() {
+  transition(teamDetailPage, teamsPage, "block");
+}
+
+function renderAllTeamsPage() {
+  teamsList.innerHTML = teams.map(t => {
+    const playerCount = t.players.length;
+    // Calculate progress percentage based on max players
+    const progressPercent = (playerCount / MAX_PLAYERS_PER_TEAM) * 100;
+
+    return `
+      <div class="team-card" onclick="openTeamDetail(${t.id})">
+        <div class="team-card-header">
+           <img src="${t.logo}" alt="${t.name}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 15px;">
+           <h2>${t.name}</h2>
+        </div>
+        
+        <div class="progress-container">
+          <div class="progress-bar" style="width: ${progressPercent}%"></div>
+        </div>
+        <div class="progress-text">${playerCount} / ${MAX_PLAYERS_PER_TEAM} Players</div>
+        
+        <div class="team-stats">
+          <div class="budget">₹${t.budget}</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function openTeamDetail(teamId) {
+  const team = teams.find(t => t.id === teamId);
+  if (!team) return;
+
+  teamDetailTitle.innerText = team.name;
+
+  if (team.players.length === 0) {
+    teamPlayersGrid.innerHTML = `
+      <div class="no-players">
+        <h2>NO PLAYERS YET</h2>
+        <p>This team hasn't bought any players.</p>
+      </div>
+    `;
+  } else {
+    teamPlayersGrid.innerHTML = team.players.map(p => `
+      <div class="player-card-item">
+        ${p.card
+        ? `<img src="${p.card}" class="player-card-image">`
+        : `<div class="player-card-fallback">${p.position}</div>`
+      }
+        <div class="player-card-name">${p.name}</div>
+        <div style="color: #4ade80; font-weight: bold; margin-top: 5px;">₹${p.price || "Sold"}</div>
+      </div>
+    `).join("");
+  }
+
+  transition(teamsPage, teamDetailPage, "block");
+}
+
+/* ================= AUCTION SIDEBAR RENDER ================= */
 function renderTeams() {
   teamSidebar.innerHTML = teams
     .map(t => `
       <div class="team ${t.id === selectedTeamId ? "active" : ""}"
-           onclick="selectTeam(${t.id})">
-        <div class="team-header">
-          <span class="team-name" onclick="event.stopPropagation(); editTeamName(${t.id})">${t.name}</span>
-          <span class="edit-icon" onclick="event.stopPropagation(); editTeamName(${t.id})">✏️</span>
-        </div>
-        <div class="team-info">
-          <div>₹${t.budget}</div>
-          <div class="player-count">Players: ${t.players.length}/${MAX_PLAYERS_PER_TEAM}</div>
+           data-id="${t.id}" style="display: flex; align-items: center; gap: 10px;">
+        <img src="${t.logo}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
+        <div>
+          <div style="font-size: 14px; font-weight: bold;">${t.name}</div>
+          <div style="color: #4ade80;">₹${t.budget}</div>
         </div>
       </div>
     `).join("");
+
+  document.querySelectorAll(".team").forEach(el => {
+    el.onclick = () => {
+      selectedTeamId = Number(el.dataset.id);
+      renderTeams();
+    };
+  });
 }
-
-window.editTeamName = (id) => {
-  const team = teams[id];
-  const newName = prompt(`Edit team name:`, team.name);
-  if (newName && newName.trim()) {
-    team.name = newName.trim();
-    renderTeams();
-    saveState();
-    saveStateToServer();
-  }
-};
-
-window.selectTeam = id => {
-  selectedTeamId = id;
-  renderTeams();
-};
 
 /* ================= SOLD / UNSOLD ================= */
 soldBtn.onclick = () => {
   if (selectedTeamId === null) return;
 
-  saveUndoState(); // Save state before making changes
   const team = teams[selectedTeamId];
-  const soldPlayer = currentPlayer;
-  const soldPrice = currentBid;
   team.budget -= currentBid;
-  // Clone the player object to preserve all properties including card
-  team.players.push(JSON.parse(JSON.stringify(currentPlayer)));
+  team.players.push({
+    ...currentPlayer,
+    price: currentBid
+  });
 
   showStamp("sold");
   soldSound.play();
-  fadeOutAudio(soldSound, 4000);
 
-  if (resultMessage) {
-    resultMessage.textContent = `${(soldPlayer?.name || "PLAYER").toUpperCase()} SOLD TO ${(team?.name || "TEAM").toUpperCase()} FOR ₹${soldPrice}`;
-  }
-
-  currentPlayer = null; // Clear so resume doesn't put sold player back on wheel
   saveState();
-  saveStateToServer();
-  finishReveal(4000);
+  finishReveal();
 };
 
 unsoldBtn.onclick = () => {
-  saveUndoState(); // Save state before making changes
-  const unsoldPlayer = currentPlayer;
   unsoldPlayers.push(currentPlayer);
 
   showStamp("unsold");
   unsoldSound.play();
-  fadeOutAudio(unsoldSound, 4000);
 
-  if (resultMessage) {
-    resultMessage.textContent = `${(unsoldPlayer?.name || "PLAYER").toUpperCase()} UNSOLD`;
-  }
-
-  currentPlayer = null; // Clear so resume doesn't put unsold player back on wheel
   saveState();
-  saveStateToServer();
-  finishReveal(4000);
+  finishReveal();
 };
 
 /* ================= FINISH ================= */
-function finishReveal(holdMs = 1600) {
-  // Hold the reveal screen (stamp/message) then fade out and switch screens
+function finishReveal() {
   setTimeout(() => {
-    revealScreen.classList.remove("fade-in");
-    revealScreen.classList.add("fade-out");
-
-    setTimeout(() => {
-      revealScreen.classList.remove("fade-out");
-      revealScreen.style.display = "none";
-
-      if (!currentPool.length) {
-        // Next: round complete overlay (which later goes to final screen)
-        showRoundComplete();
-        // Ensure overlay fades in
-        roundCompleteScreen.classList.remove("fade-out");
-        roundCompleteScreen.classList.add("fade-in");
-        setTimeout(() => roundCompleteScreen.classList.remove("fade-in"), 650);
-      } else {
-        // Next: wheel
-        wheelSection.style.display = "flex";
-        wheelSection.classList.remove("fade-out");
-        wheelSection.classList.add("fade-in");
-        drawWheel();
-        setTimeout(() => wheelSection.classList.remove("fade-in"), 650);
-      }
-    }, 650);
-  }, holdMs);
+    if (!currentPool.length) {
+      showRoundComplete();
+    } else {
+      transition(revealScreen, wheelSection, "flex");
+      setTimeout(drawWheel, 600);
+    }
+  }, 1600);
 }
 
 /* ================= STAMP ================= */
 function showStamp(type) {
   stamp.innerText = type.toUpperCase();
   stamp.className = `show ${type}`;
-  setTimeout(() => stamp.className = "", 4000);
-}
-
-/* ================= AUDIO FADE ================= */
-function fadeOutAudio(audioEl, durationMs = 4000) {
-  try {
-    const startVol = typeof audioEl.volume === "number" ? audioEl.volume : 1;
-    const steps = 30;
-    const stepMs = Math.max(16, Math.floor(durationMs / steps));
-    let i = 0;
-    const timer = setInterval(() => {
-      i += 1;
-      const t = i / steps;
-      audioEl.volume = Math.max(0, startVol * (1 - t));
-      if (i >= steps) {
-        clearInterval(timer);
-        audioEl.pause();
-        audioEl.currentTime = 0;
-        audioEl.volume = startVol;
-      }
-    }, stepMs);
-  } catch {
-    // ignore audio fade errors
-  }
+  setTimeout(() => stamp.className = "", 1200);
 }
 
 /* ================= ROUND COMPLETE ================= */
 function showRoundComplete() {
-  // HARD HIDE EVERYTHING
-  wheelSection.style.display = "none";
-  revealScreen.style.display = "none";
+  // Logic for round complete transition
+  // First hide reveal screen if it's open, OR wheel if it's open (usually reveal)
+  // We assume we come from finishReveal which is primarily from Reveal Screen
 
-  // SHOW OVERLAY
-  roundCompleteScreen.style.display = "flex";
-  roundCompleteScreen.style.opacity = "1";
+  revealScreen.classList.add("fade-out");
+  wheelSection.classList.add("fade-out"); // Just in case
 
-  cardHitSound.currentTime = 0;
-  cardHitSound.play().catch(() => {});
-
-  // AFTER OVERLAY → FINAL SCREEN
   setTimeout(() => {
-    roundCompleteScreen.style.display = "none";
-    showFinalScreen();
-  }, 2200);
+    revealScreen.style.display = "none";
+    wheelSection.style.display = "none";
+    revealScreen.classList.remove("fade-out");
+    wheelSection.classList.remove("fade-out");
+
+    roundCompleteScreen.style.display = "flex";
+    roundCompleteScreen.classList.add("fade-in");
+    cardHitSound.play();
+
+    setTimeout(() => {
+      roundCompleteScreen.classList.remove("fade-in"); // cleanup
+
+      // Auto transition to final screen after some time
+      setTimeout(() => {
+        transition(roundCompleteScreen, finalScreen, "flex");
+        showFinalScreenContent(); // Populate content
+      }, 2200);
+    }, 600);
+  }, 600);
 }
 
-
 /* ================= FINAL SCREEN ================= */
-function showFinalScreen() {
-  // HARD RESET VISIBILITY
-  wheelSection.style.display = "none";
-  revealScreen.style.display = "none";
-  roundCompleteScreen.style.display = "none";
-
-  finalScreen.style.display = "flex";
-  finalScreen.style.opacity = "1";
-  finalScreen.classList.remove("fade-out");
-  finalScreen.classList.add("fade-in");
-  setTimeout(() => finalScreen.classList.remove("fade-in"), 650);
-
+function showFinalScreenContent() {
   finalScreen.innerHTML = `
     <h1>AUCTION ROUND COMPLETE</h1>
 
     <div class="final-buttons">
-      <button class="btn danger" onclick="endAuction()">END AUCTION</button>
-      ${
-        unsoldPlayers.length
-          ? `<button class="btn success" onclick="startUnsoldAuction()">START UNSOLD AUCTION</button>`
-          : ""
-      }
+      <button class="btn danger" id="endBtn">END AUCTION</button>
+      ${unsoldPlayers.length
+      ? `<button class="btn success" id="unsoldBtn2">START UNSOLD AUCTION</button>`
+      : ""
+    }
     </div>
 
-    ${
-      unsoldPlayers.length
-        ? `<table class="unsold-table">
-            <tr><th>UNSOLD PLAYERS</th></tr>
+    ${unsoldPlayers.length
+      ? `
+        <div class="unsold-table">
+          <table>
+            <tr><th>PLAYER</th></tr>
             ${unsoldPlayers.map(p => `<tr><td>${p.name}</td></tr>`).join("")}
-          </table>`
-        : ""
+          </table>
+        </div>`
+      : ""
     }
   `;
+
+  document.getElementById("endBtn").onclick = endAuction;
+  const u = document.getElementById("unsoldBtn2");
+  if (u) u.onclick = startUnsoldAuction;
+}
+
+function showFinalScreen() {
+  // Wrapper to match old function signature if called elsewhere, but logic is moved to showRoundComplete flow
+  // or direct call
+  finalScreen.style.display = "flex";
+  showFinalScreenContent();
 }
 
 
-window.startUnsoldAuction = () => {
-  finalScreen.style.display = "none";
+function startUnsoldAuction() {
   currentPool = [...unsoldPlayers];
   unsoldPlayers = [];
-  currentPlayer = null;
-  currentBid = BASE_PRICE;
-  selectedTeamId = null;
   saveState();
-  saveStateToServer();
-  wheelSection.style.display = "flex";
-  drawWheel();
-};
+  transition(finalScreen, wheelSection, "flex");
+  setTimeout(drawWheel, 600);
+}
 
-window.endAuction = () => {
-  // Save state with unsold players before ending (in case user wants to come back)
-  saveState();
-  saveStateToServer();
-  finalScreen.innerHTML = `
-    <h1>AUCTION ENDED</h1>
-    <button class="btn primary" onclick="location.reload()" style="margin-top: 30px;">RESTART</button>
-  `;
-};
-
+function endAuction() {
+  localStorage.removeItem("auctionState");
+  finalScreen.innerHTML = "<h1>AUCTION ENDED</h1>";
+}

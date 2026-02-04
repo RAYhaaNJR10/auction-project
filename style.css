@@ -1,1341 +1,1429 @@
   body {
-  margin: 0;
-  background: #0F0F0F;
-  background-image: 
-    linear-gradient(rgba(107, 70, 193, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(107, 70, 193, 0.05) 1px, transparent 1px);
-  background-size: 50px 50px;
-  color: #E5E7EB;
-  font-family: "Inter", "Segoe UI", Arial, sans-serif;
-  text-align: center;
-  position: relative;
-}
+    margin: 0;
+    background: #0F0F0F;
+    background-image:
+      linear-gradient(rgba(107, 70, 193, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(107, 70, 193, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    color: #E5E7EB;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    text-align: center;
+    position: relative;
+  }
 
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 20% 50%, rgba(107, 70, 193, 0.1) 0%, transparent 50%),
-              radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 9999;
-}
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 50%, rgba(107, 70, 193, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 9999;
+  }
 
-/* ================= MAIN MENU ================= */
-#mainMenu {
-  min-height: 100vh;
-  background: url("assets/kurrah.jpeg") center / cover no-repeat;
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
+  /* ================= MAIN MENU ================= */
+  #mainMenu {
+    min-height: 100vh;
+    background: url("assets/kurrah.jpeg") center / cover no-repeat;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
 
-#mainMenu::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  z-index: 0;
-}
+  #mainMenu::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 0;
+  }
 
-#mainMenu * {
-  position: relative;
-  z-index: 1;
-}
+  #mainMenu * {
+    position: relative;
+    z-index: 1;
+  }
 
-#mainMenu h1 {
-  font-size: 64px;
-  font-weight: 900;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: #A78BFA;
-  text-shadow: 
-    0 0 20px rgba(167, 139, 250, 0.4),
-    0 0 40px rgba(167, 139, 250, 0.2);
-  margin-bottom: 60px;
-  border: 2px solid rgba(167, 139, 250, 0.5);
-  padding: 20px 40px;
-  background: rgba(15, 15, 15, 0.8);
-  backdrop-filter: blur(10px);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.5),
-    inset 0 0 20px rgba(167, 139, 250, 0.1);
-}
+  #mainMenu h1 {
+    font-size: 64px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #A78BFA;
+    text-shadow:
+      0 0 20px rgba(167, 139, 250, 0.4),
+      0 0 40px rgba(167, 139, 250, 0.2);
+    margin-bottom: 60px;
+    border: 2px solid rgba(167, 139, 250, 0.5);
+    padding: 20px 40px;
+    background: rgba(15, 15, 15, 0.8);
+    backdrop-filter: blur(10px);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.5),
+      inset 0 0 20px rgba(167, 139, 250, 0.1);
+  }
 
-.menu-options {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  align-items: center;
-}
+  .menu-options {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+  }
 
-.btn.large {
-  padding: 20px 60px;
-  font-size: 24px;
-  min-width: 300px;
-}
+  .btn.large {
+    padding: 20px 60px;
+    font-size: 24px;
+    min-width: 300px;
+  }
 
-/* ================= TEAMS PAGE ================= */
-#teamsPage {
-  min-height: 100vh;
-  background: url("assets/kurrah.jpeg") center / cover no-repeat;
-  padding: 40px;
-  position: relative;
-  display: none;
-}
+  /* ================= TEAMS PAGE ================= */
+  #teamsPage {
+    min-height: 100vh;
+    background: url("assets/kurrah.jpeg") center / cover no-repeat;
+    padding: 40px;
+    position: relative;
+    display: none;
+  }
 
-#teamsPage::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  z-index: 0;
-}
+  #teamsPage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 0;
+  }
 
-#teamsPage * {
-  position: relative;
-  z-index: 1;
-}
+  #teamsPage * {
+    position: relative;
+    z-index: 1;
+  }
 
-.teams-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 40px;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-}
+  .teams-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-.teams-header h1 {
-  font-size: 48px;
-  font-weight: 900;
-  letter-spacing: 4px;
-  color: #A78BFA;
-  text-shadow: 
-    0 0 20px rgba(167, 139, 250, 0.4),
-    0 0 40px rgba(167, 139, 250, 0.2);
-  border: 2px solid rgba(167, 139, 250, 0.4);
-  padding: 15px 30px;
-  background: rgba(15, 15, 15, 0.8);
-  backdrop-filter: blur(10px);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.5),
-    inset 0 0 20px rgba(167, 139, 250, 0.1);
-}
+  .teams-header h1 {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #A78BFA;
+    text-shadow:
+      0 0 20px rgba(167, 139, 250, 0.4),
+      0 0 40px rgba(167, 139, 250, 0.2);
+    border: 2px solid rgba(167, 139, 250, 0.4);
+    padding: 15px 30px;
+    background: rgba(15, 15, 15, 0.8);
+    backdrop-filter: blur(10px);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.5),
+      inset 0 0 20px rgba(167, 139, 250, 0.1);
+  }
 
-#teamsList {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
+  #teamsList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-.team-card {
-  background: rgba(26, 26, 26, 0.9);
-  border: 1px solid rgba(167, 139, 250, 0.2);
-  border-radius: 12px;
-  padding: 25px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  box-shadow: 
-    0 4px 20px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
+  .team-card {
+    background: rgba(26, 26, 26, 0.9);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    border-radius: 12px;
+    padding: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
 
-.team-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(167, 139, 250, 0.5);
-  box-shadow: 
-    0 8px 30px rgba(107, 70, 193, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  background: rgba(30, 30, 30, 0.95);
-}
+  .team-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(167, 139, 250, 0.5);
+    box-shadow:
+      0 8px 30px rgba(107, 70, 193, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    background: rgba(30, 30, 30, 0.95);
+  }
 
-.team-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
+  .team-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
 
-.team-card-header h2 {
-  font-size: 28px;
-  font-weight: 900;
-  color: #C4B5FD;
-  margin: 0;
-  text-shadow: 0 2px 10px rgba(167, 139, 250, 0.3);
-}
+  .team-card-header h2 {
+    font-size: 28px;
+    font-weight: 900;
+    color: #C4B5FD;
+    margin: 0;
+    text-shadow: 0 2px 10px rgba(167, 139, 250, 0.3);
+  }
 
-.team-stats {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-}
+  .team-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
 
-.budget {
-  font-size: 20px;
-  font-weight: bold;
-  color: #10B981;
-  text-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-}
+  .budget {
+    font-size: 20px;
+    font-weight: bold;
+    color: #10B981;
+    text-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  }
 
-.player-count-badge {
-  background: linear-gradient(135deg, #7C3AED, #6B46C1);
-  color: #FFFFFF;
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 14px;
-  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
-}
+  .player-count-badge {
+    background: linear-gradient(135deg, #7C3AED, #6B46C1);
+    color: #FFFFFF;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
+  }
 
-.progress-container {
-  width: 100%;
-  height: 30px;
-  background: rgba(26, 26, 26, 0.8);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 10px;
-  border: 1px solid rgba(167, 139, 250, 0.2);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-}
+  .progress-container {
+    width: 100%;
+    height: 30px;
+    background: rgba(26, 26, 26, 0.8);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
 
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, #7C3AED, #A78BFA);
-  border-radius: 8px;
-  transition: width 0.5s ease;
-  box-shadow: 
-    0 0 10px rgba(124, 58, 237, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #7C3AED, #A78BFA);
+    border-radius: 8px;
+    transition: width 0.5s ease;
+    box-shadow:
+      0 0 10px rgba(124, 58, 237, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
 
-.progress-text {
-  font-size: 14px;
-  color: #ccc;
-  text-align: left;
-}
+  .progress-text {
+    font-size: 14px;
+    color: #ccc;
+    text-align: left;
+  }
 
-/* ================= TEAM DETAIL PAGE ================= */
-#teamDetailPage {
-  min-height: 100vh;
-  background: url("assets/kurrah.jpeg") center / cover no-repeat;
-  padding: 40px;
-  position: relative;
-  display: none;
-}
+  /* ================= TEAM DETAIL PAGE ================= */
+  #teamDetailPage {
+    min-height: 100vh;
+    background: url("assets/kurrah.jpeg") center / cover no-repeat;
+    padding: 40px;
+    position: relative;
+    display: none;
+  }
 
-#teamDetailPage::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  z-index: 0;
-}
+  #teamDetailPage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 0;
+  }
 
-#teamDetailPage * {
-  position: relative;
-  z-index: 1;
-}
+  #teamDetailPage * {
+    position: relative;
+    z-index: 1;
+  }
 
-.team-detail-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 40px;
-  max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
-}
+  .team-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-#teamDetailTitle {
-  font-size: 48px;
-  font-weight: 900;
-  letter-spacing: 4px;
-  color: #A78BFA;
-  text-shadow: 
-    0 0 20px rgba(167, 139, 250, 0.4),
-    0 0 40px rgba(167, 139, 250, 0.2);
-  margin: 0;
-  border: 2px solid rgba(167, 139, 250, 0.4);
-  padding: 15px 30px;
-  background: rgba(15, 15, 15, 0.8);
-  backdrop-filter: blur(10px);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.5),
-    inset 0 0 20px rgba(167, 139, 250, 0.1);
-}
+  #teamDetailTitle {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #A78BFA;
+    text-shadow:
+      0 0 20px rgba(167, 139, 250, 0.4),
+      0 0 40px rgba(167, 139, 250, 0.2);
+    margin: 0;
+    border: 2px solid rgba(167, 139, 250, 0.4);
+    padding: 15px 30px;
+    background: rgba(15, 15, 15, 0.8);
+    backdrop-filter: blur(10px);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.5),
+      inset 0 0 20px rgba(167, 139, 250, 0.1);
+  }
 
-#teamPlayersGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 30px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
+  #teamPlayersGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
 
-.player-card-item {
-  background: rgba(26, 26, 26, 0.9);
-  border: 1px solid rgba(167, 139, 250, 0.2);
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  box-shadow: 
-    0 4px 20px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
+  .player-card-item {
+    background: rgba(26, 26, 26, 0.9);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
 
-.player-card-item:hover {
-  transform: translateY(-5px);
-  border-color: rgba(167, 139, 250, 0.5);
-  box-shadow: 
-    0 8px 30px rgba(107, 70, 193, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  background: rgba(30, 30, 30, 0.95);
-}
+  .player-card-item:hover {
+    transform: translateY(-5px);
+    border-color: rgba(167, 139, 250, 0.5);
+    box-shadow:
+      0 8px 30px rgba(107, 70, 193, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    background: rgba(30, 30, 30, 0.95);
+  }
 
-.player-card-image {
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-}
+  .player-card-image {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  }
 
-.player-card-fallback {
-  width: 100%;
-  aspect-ratio: 2/3;
-  background: linear-gradient(135deg, #7C3AED, #6B46C1);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 900;
-  color: #FFFFFF;
-  margin-bottom: 15px;
-  box-shadow: 
-    0 4px 20px rgba(124, 58, 237, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(167, 139, 250, 0.3);
-}
+  .player-card-fallback {
+    width: 100%;
+    aspect-ratio: 2/3;
+    background: linear-gradient(135deg, #7C3AED, #6B46C1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 900;
+    color: #FFFFFF;
+    margin-bottom: 15px;
+    box-shadow:
+      0 4px 20px rgba(124, 58, 237, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(167, 139, 250, 0.3);
+  }
 
-.player-card-name {
-  font-size: 18px;
-  font-weight: bold;
-  color: #C4B5FD;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  text-shadow: 0 2px 10px rgba(167, 139, 250, 0.3);
-}
+  .player-card-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #C4B5FD;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 10px rgba(167, 139, 250, 0.3);
+  }
 
-.no-players {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 60px;
-  background: rgba(0, 0, 0, 0.6);
-  border: 3px solid #ffcc00;
-  border-radius: 16px;
-}
+  .no-players {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 3px solid #ffcc00;
+    border-radius: 16px;
+  }
 
-.no-players h2 {
-  font-size: 36px;
-  color: #ffcc00;
-  margin-bottom: 20px;
-}
+  .no-players h2 {
+    font-size: 36px;
+    color: #ffcc00;
+    margin-bottom: 20px;
+  }
 
-.no-players p {
-  font-size: 20px;
-  color: #ccc;
-}
+  .no-players p {
+    font-size: 20px;
+    color: #ccc;
+  }
 
-/* ================= BUTTONS ================= */
+  /* ================= BUTTONS ================= */
 
-.btn {
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  letter-spacing: 1px;
-  border-radius: 30px;
-  padding: 14px 42px;
-  font-size: 18px;
-  transition: all 0.25s ease;
-}
+  .btn {
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border-radius: 30px;
+    padding: 14px 42px;
+    font-size: 18px;
+    transition: all 0.25s ease;
+  }
 
-.btn:hover {
-  transform: scale(1.05);
-}
+  .btn:hover {
+    transform: scale(1.05);
+  }
 
-.primary {
-  background: linear-gradient(135deg, #7C3AED, #6B46C1);
-  color: #FFFFFF;
-  border: 1px solid rgba(167, 139, 250, 0.3);
-  box-shadow: 
-    0 4px 15px rgba(124, 58, 237, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
+  .primary {
+    background: linear-gradient(135deg, #7C3AED, #6B46C1);
+    color: #FFFFFF;
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    box-shadow:
+      0 4px 15px rgba(124, 58, 237, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
 
-.primary:hover {
-  background: linear-gradient(135deg, #8B5CF6, #7C3AED);
-  box-shadow: 
-    0 6px 20px rgba(124, 58, 237, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
-}
+  .primary:hover {
+    background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+    box-shadow:
+      0 6px 20px rgba(124, 58, 237, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
 
-.success {
-  background: linear-gradient(135deg, #10B981, #059669);
-  color: #FFFFFF;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  box-shadow: 
-    0 4px 15px rgba(16, 185, 129, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
+  .success {
+    background: linear-gradient(135deg, #10B981, #059669);
+    color: #FFFFFF;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow:
+      0 4px 15px rgba(16, 185, 129, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
 
-.success:hover {
-  background: linear-gradient(135deg, #34D399, #10B981);
-  box-shadow: 
-    0 6px 20px rgba(16, 185, 129, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
-}
+  .success:hover {
+    background: linear-gradient(135deg, #34D399, #10B981);
+    box-shadow:
+      0 6px 20px rgba(16, 185, 129, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
 
-.danger {
-  background: linear-gradient(135deg, #EC4899, #DB2777);
-  color: #FFFFFF;
-  border: 1px solid rgba(236, 72, 153, 0.3);
-  box-shadow: 
-    0 4px 15px rgba(236, 72, 153, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
+  .danger {
+    background: linear-gradient(135deg, #EC4899, #DB2777);
+    color: #FFFFFF;
+    border: 1px solid rgba(236, 72, 153, 0.3);
+    box-shadow:
+      0 4px 15px rgba(236, 72, 153, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
 
-.danger:hover {
-  background: linear-gradient(135deg, #F472B6, #EC4899);
-  box-shadow: 
-    0 6px 20px rgba(236, 72, 153, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
-}
+  .danger:hover {
+    background: linear-gradient(135deg, #F472B6, #EC4899);
+    box-shadow:
+      0 6px 20px rgba(236, 72, 153, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
 
-.warning {
-  background: linear-gradient(135deg, #F59E0B, #D97706);
-  color: #FFFFFF;
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  box-shadow: 
-    0 4px 15px rgba(245, 158, 11, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
+  .warning {
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    color: #FFFFFF;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    box-shadow:
+      0 4px 15px rgba(245, 158, 11, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
 
-.warning:hover {
-  background: linear-gradient(135deg, #FBBF24, #F59E0B);
-  box-shadow: 
-    0 6px 20px rgba(245, 158, 11, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
-}
+  .warning:hover {
+    background: linear-gradient(135deg, #FBBF24, #F59E0B);
+    box-shadow:
+      0 6px 20px rgba(245, 158, 11, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
 
-/* ================= WHEEL PAGE ================= */
+  /* ================= WHEEL PAGE ================= */
 
-#wheelSection {
-  height: 100vh;
-  background: url("assets/kurrah.jpeg") top center / cover no-repeat;
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  opacity: 1;
-}
+  #wheelSection {
+    height: 100vh;
+    background: url("assets/kurrah.jpeg") top center / cover no-repeat;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    opacity: 1;
+  }
 
-#wheelSection.fade-in {
-  animation: fadeIn 0.6s ease forwards;
-}
+  #wheelSection.fade-in {
+    animation: fadeIn 0.6s ease forwards;
+  }
 
-#wheelSection::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-}
+  #wheelSection::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+  }
 
-#wheelSection * {
-  position: relative;
-  z-index: 1;
-}
+  #wheelSection * {
+    position: relative;
+    z-index: 1;
+  }
 
-.wheel-container {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.3));
-}
+  .wheel-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.3));
+  }
 
-#wheel {
-  border-radius: 50%;
-  box-shadow: 
-    0 0 10px rgba(0, 255, 255, 0.4),
-    inset 0 0 15px rgba(0, 0, 0, 0.5);
-  border: 3px solid #00ffff;
-  background: #0a0a0a;
-}
+  #wheel {
+    border-radius: 50%;
+    box-shadow:
+      0 0 10px rgba(0, 255, 255, 0.4),
+      inset 0 0 15px rgba(0, 0, 0, 0.5);
+    border: 3px solid #00ffff;
+    background: #0a0a0a;
+  }
 
-.pointer {
-  position: absolute;
-  top: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 40px;
-  color: #00ffff;
-  text-shadow: 
-    0 0 5px rgba(0, 255, 255, 0.6),
-    0 0 10px rgba(0, 255, 255, 0.4);
-  z-index: 10;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-}
+  .pointer {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 40px;
+    color: #00ffff;
+    text-shadow:
+      0 0 5px rgba(0, 255, 255, 0.6),
+      0 0 10px rgba(0, 255, 255, 0.4);
+    z-index: 10;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  }
 
-/* ================= FINAL PICKS BANNER ================= */
+  /* ================= FINAL PICKS BANNER ================= */
 
-#finalBanner {
-  display: none;
-  margin-bottom: 18px;
-  padding: 12px 40px;
-  font-size: 48px;
-  font-weight: 900;
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  font-family: "Impact", "Arial Black", sans-serif;
-  color: #ffcc00;
+  #finalBanner {
+    display: none;
+    margin-bottom: 18px;
+    padding: 12px 40px;
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    font-family: "Impact", "Arial Black", sans-serif;
+    color: #ffcc00;
 
-  background: rgba(0, 0, 0, 0.6);
-  border: 3px solid #ffcc00;
-  border-radius: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 3px solid #ffcc00;
+    border-radius: 12px;
 
-  box-shadow:
-    0 0 20px rgba(255, 204, 0, 0.7),
-    inset 0 0 15px rgba(255, 204, 0, 0.4);
+    box-shadow:
+      0 0 20px rgba(255, 204, 0, 0.7),
+      inset 0 0 15px rgba(255, 204, 0, 0.4);
 
-  animation: finalPulse 1.5s infinite alternate;
-}
+    animation: finalPulse 1.5s infinite alternate;
+  }
 
-/* Pulse animation for tension */
-@keyframes finalPulse {
-  from {
-    transform: scale(1);
+  /* Pulse animation for tension */
+  @keyframes finalPulse {
+    from {
+      transform: scale(1);
+      box-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
+    }
+
+    to {
+      transform: scale(1.05);
+      box-shadow: 0 0 35px rgba(255, 204, 0, 1);
+    }
+  }
+
+
+  /* ================= UNDO ================= */
+
+  #undoBtn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: block;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4);
+  }
+
+  /* ================= REVEAL ================= */
+
+  #revealScreen {
+    position: fixed;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: #000;
+  }
+
+  #revealScreen.sold-bg {
+    background: #000;
+  }
+
+  #revealScreen.unsold-bg {
+    background: #000;
+  }
+
+  #playerVideo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+  }
+
+  #playerCard {
+    width: 360px;
+    display: none;
+    margin-bottom: 20px;
+    transform: translateY(-30px);
+  }
+
+  #statusText {
+    margin-top: 20px;
+    font-size: 64px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    font-family: "Impact", "Arial Black", sans-serif;
+    display: none;
+    animation: popIn 0.5s ease forwards;
+  }
+
+  /* SOLD look */
+  #revealScreen.sold-bg #statusText {
+    color: #00ff88;
+    text-shadow:
+      0 0 10px rgba(0, 255, 136, 0.8),
+      0 0 25px rgba(0, 255, 136, 0.8),
+      0 0 45px rgba(0, 255, 136, 0.6);
+  }
+
+  /* UNSOLD look */
+  #revealScreen.unsold-bg #statusText {
+    color: #ff4d4d;
+    text-shadow:
+      0 0 10px rgba(255, 77, 77, 0.8),
+      0 0 25px rgba(255, 77, 77, 0.8),
+      0 0 45px rgba(255, 77, 77, 0.6);
+  }
+
+  /* POP animation */
+  @keyframes popIn {
+    0% {
+      transform: scale(0.6);
+      opacity: 0;
+    }
+
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+
+  /* ================= FINAL SCREEN ================= */
+
+  #finalScreen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url("assets/kurrah.jpeg") top center / cover no-repeat;
+    padding: 40px;
+    opacity: 0;
+    overflow-y: auto;
+  }
+
+  #finalScreen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: -1;
+  }
+
+  #finalScreen.fade-in {
+    animation: fadeIn 0.8s ease forwards;
+  }
+
+  .final-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  .unsold-table {
+    width: 70%;
+    margin: auto;
+    background: rgba(0, 0, 0, 0.65);
+    border: 2px solid #ffcc00;
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
+    padding: 20px;
+  }
+
+  /* ================= ANIMATIONS ================= */
+
+  .fade-in {
+    animation: fadeIn 0.6s ease forwards;
+  }
+
+  .fade-out {
+    animation: fadeOut 0.6s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* ================= UNSOLD TABLE TEXT ALIGN FIX ================= */
+
+  .unsold-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .unsold-table th,
+  .unsold-table td {
+    text-align: center;
+    /* CENTER TEXT */
+    padding: 14px 0;
+    font-size: 18px;
+    color: white;
+  }
+
+  .unsold-table th {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #ffcc00;
+    border-bottom: 2px solid rgba(255, 204, 0, 0.6);
+  }
+
+  .unsold-table tr:not(:first-child):hover {
+    background: rgba(255, 204, 0, 0.12);
+  }
+
+
+  /* ================= RESUME POPUP ================= */
+
+  #resumeOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  #resumeBox {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #ffcc00;
+    box-shadow: 0 0 30px rgba(255, 204, 0, 0.8);
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 420px;
+  }
+
+  #resumeBox h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: #ffcc00;
+  }
+
+  #resumeBox p {
+    font-size: 18px;
+    margin-bottom: 30px;
+  }
+
+  .resume-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  /* ================= MASTER VOLUME ================= */
+
+  #volumeControl {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    opacity: 0.25;
+    transition: opacity 0.3s;
+    z-index: 1000;
+  }
+
+  #volumeControl:hover {
+    opacity: 1;
+  }
+
+  #volumeSlider {
+    width: 120px;
+  }
+
+  /* ================= SOLD / UNSOLD STAMP ================= */
+
+  #stamp {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-18deg) scale(0);
+    padding: 18px 50px;
+
+    font-size: 72px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    font-family: "Impact", "Arial Black", sans-serif;
+
+    border: 6px solid;
+    border-radius: 12px;
+
+    opacity: 0;
+    pointer-events: none;
+    z-index: 60;
+  }
+
+  /* SOLD look */
+  #stamp.sold {
+    color: #00ff88;
+    border-color: #00ff88;
+    text-shadow:
+      0 0 10px rgba(0, 255, 136, 0.8),
+      0 0 30px rgba(0, 255, 136, 0.6);
+  }
+
+  /* UNSOLD look */
+  #stamp.unsold {
+    color: #ff4d4d;
+    border-color: #ff4d4d;
+    text-shadow:
+      0 0 10px rgba(255, 77, 77, 0.8),
+      0 0 30px rgba(255, 77, 77, 0.6);
+  }
+
+  /* Slam animation */
+  #stamp.show {
+    animation: stampSlam 0.35s ease-out forwards;
+  }
+
+  @keyframes stampSlam {
+    0% {
+      transform: translate(-50%, -50%) rotate(-18deg) scale(2.2);
+      opacity: 0;
+    }
+
+    60% {
+      transform: translate(-50%, -50%) rotate(-18deg) scale(0.9);
+      opacity: 1;
+    }
+
+    100% {
+      transform: translate(-50%, -50%) rotate(-18deg) scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* Screen shake effect */
+  @keyframes screenShake {
+    0% {
+      transform: translate(0);
+    }
+
+    25% {
+      transform: translate(-6px, 4px);
+    }
+
+    50% {
+      transform: translate(6px, -4px);
+    }
+
+    75% {
+      transform: translate(-4px, -6px);
+    }
+
+    100% {
+      transform: translate(0);
+    }
+  }
+
+  .shake {
+    animation: screenShake 0.3s;
+  }
+
+  /* ================= CARD DEPTH EFFECT ================= */
+
+  #playerCard {
+    animation: cardPop 0.5s ease forwards;
+  }
+
+  @keyframes cardPop {
+    0% {
+      transform: scale(0.94);
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+      opacity: 0;
+    }
+
+    100% {
+      transform: scale(1);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+      opacity: 1;
+    }
+  }
+
+  /* ================= ROUND COMPLETE BANNER ================= */
+
+  .round-complete {
+    font-size: 72px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    font-family: "Impact", "Arial Black", sans-serif;
+    color: #ffcc00;
+    text-shadow:
+      0 0 15px rgba(255, 204, 0, 0.8),
+      0 0 40px rgba(255, 204, 0, 0.6);
+    animation: fadeIn 0.6s ease;
+  }
+
+  /* ================= ROUND COMPLETED OVERLAY ================= */
+
+  #roundCompleteScreen {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1200;
+    opacity: 0;
+  }
+
+  .round-complete-text {
+    font-size: 72px;
+    font-weight: 900;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    font-family: "Impact", "Arial Black", sans-serif;
+    color: #ffcc00;
+    text-shadow:
+      0 0 15px rgba(255, 204, 0, 0.8),
+      0 0 40px rgba(255, 204, 0, 0.6);
+  }
+
+  /* Fade helpers (safe to append even if they exist already) */
+  .round-fade-in {
+    animation: roundFadeIn 0.8s ease forwards;
+  }
+
+  .round-fade-out {
+    animation: roundFadeOut 0.8s ease forwards;
+  }
+
+  @keyframes roundFadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes roundFadeOut {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+
+  #roundCompleteScreen {
+    pointer-events: none;
+  }
+
+  /* ================= EXISTING CSS (UNCHANGED ABOVE) ================= */
+  /* (everything you pasted remains exactly the same) */
+
+
+  /* ================================================================= */
+  /* ================= PLAYER DISPLAY (CARD / NAME) ================== */
+  /* ================================================================= */
+
+  #playerDisplay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #playerNameFallback {
+    display: none;
+    margin-top: 20px;
+    padding: 24px 50px;
+    font-size: 56px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-family: "Impact", "Arial Black", sans-serif;
+    color: #ffcc00;
+
+    background: rgba(0, 0, 0, 0.75);
+    border: 3px solid #ffcc00;
+    border-radius: 14px;
+
+    box-shadow:
+      0 0 25px rgba(255, 204, 0, 0.7),
+      inset 0 0 15px rgba(255, 204, 0, 0.4);
+
+    animation: popIn 0.5s ease forwards;
+  }
+
+
+  /* ================================================================= */
+  /* ================= TEAM SIDEBAR ================= */
+  /* ================================================================= */
+
+  #teamSidebar {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 260px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #ffcc00;
+    border-radius: 16px;
+    padding: 18px;
+
+    box-shadow: 0 0 30px rgba(255, 204, 0, 0.4);
+  }
+
+  #teamSidebar h2 {
+    margin-bottom: 16px;
+    font-size: 24px;
+    letter-spacing: 3px;
+    color: #ffcc00;
+  }
+
+  .team {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 10px 12px;
+    margin-bottom: 8px;
+
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .team-name {
+    color: #ffd700;
+  }
+
+  .team-budget {
+    color: #00ff88;
+  }
+
+  .team-count {
+    color: #ffcc00;
+  }
+
+
+  /* ================================================================= */
+  /* ================= BIDDING CONTROLS ================= */
+  /* ================================================================= */
+
+  #bidControls {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-top: 30px;
+  }
+
+  #currentBid {
+    min-width: 120px;
+    padding: 16px 24px;
+
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: #ffcc00;
+
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #ffcc00;
+    border-radius: 14px;
+
+    box-shadow:
+      0 0 20px rgba(255, 204, 0, 0.6),
+      inset 0 0 12px rgba(255, 204, 0, 0.4);
+  }
+
+
+  /* ================================================================= */
+  /* ================= REVEAL SCREEN LAYOUT FIX ================= */
+  /* ================================================================= */
+
+  #revealScreen {
+    padding-top: 40px;
+  }
+
+  /* ================================================================= */
+  /* ================= REVEAL CENTER LAYOUT ================= */
+  /* ================================================================= */
+
+  .reveal-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  /* ================================================================= */
+  /* ================= AUCTION CONTROLS (PRICE & BUTTONS) ================= */
+  /* ================================================================= */
+
+  #auctionControls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+  }
+
+  #minusBtn,
+  #plusBtn {
+    width: 80px;
+    height: 80px;
+    font-size: 36px;
+    font-weight: 900;
+    border: 1px solid rgba(167, 139, 250, 0.4);
+    border-radius: 50%;
+    background: rgba(26, 26, 26, 0.9);
+    color: #A78BFA;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 4px 15px rgba(0, 0, 0, 0.5),
+      inset 0 0 10px rgba(167, 139, 250, 0.1);
+  }
+
+  #minusBtn:hover,
+  #plusBtn:hover {
+    background: linear-gradient(135deg, #7C3AED, #6B46C1);
+    color: #FFFFFF;
+    transform: scale(1.1);
+    border-color: #A78BFA;
+    box-shadow:
+      0 6px 25px rgba(124, 58, 237, 0.4),
+      inset 0 0 15px rgba(167, 139, 250, 0.2);
+  }
+
+  #currentPrice {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: #A78BFA;
+    min-width: 200px;
+    text-align: center;
+    padding: 20px 30px;
+    background: rgba(26, 26, 26, 0.9);
+    border: 1px solid rgba(167, 139, 250, 0.4);
+    border-radius: 12px;
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.6),
+      inset 0 0 20px rgba(167, 139, 250, 0.1);
+    text-shadow: 0 2px 10px rgba(167, 139, 250, 0.4);
+  }
+
+
+  /* ================================================================= */
+  /* ================= SOLD / UNSOLD BUTTON GROUP ================= */
+  /* ================================================================= */
+
+  #decisionButtons {
+    position: fixed;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 0;
+    z-index: 1100;
+  }
+
+  #decisionButtons .btn {
+    padding: 18px 64px;
+    font-size: 20px;
+    border-radius: 32px;
+  }
+
+  /* remove old offset; fixed positioning handles visibility */
+
+  #decisionButtons .btn {
+    min-width: 210px;
+  }
+
+  #resultMessage {
+    margin-top: 10px;
+    max-width: 760px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(167, 139, 250, 0.35);
+    color: #E5E7EB;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: center;
+    min-height: 24px;
+    /* keeps space even when empty */
+  }
+
+
+  /* ================================================================= */
+  /* ================= SAFETY: HIDE VIDEO COMPLETELY ================= */
+  /* ================================================================= */
+
+  #playerVideo {
+    display: none !important;
+  }
+
+
+  /* ================================================================= */
+  /* ================= ROUND COMPLETED OVERLAY FIX ================= */
+  /* ================================================================= */
+
+  #roundCompleteScreen {
+    display: none;
+    opacity: 0;
+  }
+
+  .round-complete-text {
+    animation: popIn 0.6s ease forwards;
+  }
+
+  /* ===== TEAM SIDEBAR ===== */
+  #teamSidebar {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .team {
+    padding: 12px 18px;
+    border: 2px solid #ffcc00;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .team:hover {
+    background: rgba(255, 204, 0, 0.2);
+    transform: scale(1.02);
+  }
+
+  .team.active {
+    background: #ffcc00 !important;
+    color: #000 !important;
+    font-weight: 900;
     box-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
   }
-  to {
-    transform: scale(1.05);
-    box-shadow: 0 0 35px rgba(255, 204, 0, 1);
+
+  .team.active * {
+    color: #000 !important;
   }
-}
 
-
-/* ================= UNDO ================= */
-
-#undoBtn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  display: block;
-  z-index: 1000;
-  box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4);
-}
-
-/* ================= REVEAL ================= */
-
-#revealScreen {
-  position: fixed;
-  inset: 0;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  background: #000;
-}
-
-#revealScreen.sold-bg {
-  background: #000;
-}
-
-#revealScreen.unsold-bg {
-  background: #000;
-}
-
-#playerVideo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: none;
-}
-
-#playerCard {
-  width: 360px;
-  display: none;
-  margin-bottom: 20px;
-  transform: translateY(-30px);
-}
-
-#statusText {
-  margin-top: 20px;
-  font-size: 64px;
-  font-weight: 900;
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  font-family: "Impact", "Arial Black", sans-serif;
-  display: none;
-  animation: popIn 0.5s ease forwards;
-}
-
-/* SOLD look */
-#revealScreen.sold-bg #statusText {
-  color: #00ff88;
-  text-shadow:
-    0 0 10px rgba(0,255,136,0.8),
-    0 0 25px rgba(0,255,136,0.8),
-    0 0 45px rgba(0,255,136,0.6);
-}
-
-/* UNSOLD look */
-#revealScreen.unsold-bg #statusText {
-  color: #ff4d4d;
-  text-shadow:
-    0 0 10px rgba(255,77,77,0.8),
-    0 0 25px rgba(255,77,77,0.8),
-    0 0 45px rgba(255,77,77,0.6);
-}
-
-/* POP animation */
-@keyframes popIn {
-  0% {
-    transform: scale(0.6);
-    opacity: 0;
+  .team.active .team-name,
+  .team.active .team-header,
+  .team.active .team-info,
+  .team.active .team-info div,
+  .team.active .player-count,
+  .team.active .budget {
+    color: #000 !important;
   }
-  100% {
-    transform: scale(1);
+
+  .team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .team-name {
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .edit-icon {
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+
+  .edit-icon:hover {
     opacity: 1;
   }
-}
 
-
-/* ================= FINAL SCREEN ================= */
-
-#finalScreen {
-  display: none;
-  min-height: 100vh;
-  background: url("assets/kurrah.jpeg") top center / cover no-repeat;
-  padding: 40px;
-  opacity: 0;
-}
-
-#finalScreen.fade-in {
-  animation: fadeIn 0.8s ease forwards;
-}
-
-.final-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-bottom: 40px;
-}
-
-.unsold-table {
-  width: 70%;
-  margin: auto;
-  background: rgba(0,0,0,0.65);
-  border: 2px solid #ffcc00;
-  box-shadow: 0 0 20px rgba(255,204,0,0.6);
-  padding: 20px;
-}
-
-/* ================= ANIMATIONS ================= */
-
-.fade-in {
-  animation: fadeIn 0.6s ease forwards;
-}
-
-.fade-out {
-  animation: fadeOut 0.6s ease forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-/* ================= UNSOLD TABLE TEXT ALIGN FIX ================= */
-
-.unsold-table table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.unsold-table th,
-.unsold-table td {
-  text-align: center;          /* CENTER TEXT */
-  padding: 14px 0;
-  font-size: 18px;
-  color: white;
-}
-
-.unsold-table th {
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: 2px;
-  color: #ffcc00;
-  border-bottom: 2px solid rgba(255, 204, 0, 0.6);
-}
-
-.unsold-table tr:not(:first-child):hover {
-  background: rgba(255, 204, 0, 0.12);
-}
-
-
-/* ================= RESUME POPUP ================= */
-
-#resumeOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-#resumeBox {
-  background: rgba(0,0,0,0.9);
-  border: 2px solid #ffcc00;
-  box-shadow: 0 0 30px rgba(255,204,0,0.8);
-  padding: 40px;
-  border-radius: 16px;
-  text-align: center;
-  max-width: 420px;
-}
-
-#resumeBox h2 {
-  font-size: 32px;
-  margin-bottom: 10px;
-  color: #ffcc00;
-}
-
-#resumeBox p {
-  font-size: 18px;
-  margin-bottom: 30px;
-}
-
-.resume-actions {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-}
-
-/* ================= MASTER VOLUME ================= */
-
-#volumeControl {
-  position: fixed;
-  bottom: 15px;
-  right: 15px;
-  opacity: 0.25;
-  transition: opacity 0.3s;
-  z-index: 1000;
-}
-
-#volumeControl:hover {
-  opacity: 1;
-}
-
-#volumeSlider {
-  width: 120px;
-}
-
-/* ================= SOLD / UNSOLD STAMP ================= */
-
-#stamp {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-18deg) scale(0);
-  padding: 18px 50px;
-
-  font-size: 72px;
-  font-weight: 900;
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  font-family: "Impact", "Arial Black", sans-serif;
-
-  border: 6px solid;
-  border-radius: 12px;
-
-  opacity: 0;
-  pointer-events: none;
-  z-index: 60;
-}
-
-/* SOLD look */
-#stamp.sold {
-  color: #00ff88;
-  border-color: #00ff88;
-  text-shadow:
-    0 0 10px rgba(0,255,136,0.8),
-    0 0 30px rgba(0,255,136,0.6);
-}
-
-/* UNSOLD look */
-#stamp.unsold {
-  color: #ff4d4d;
-  border-color: #ff4d4d;
-  text-shadow:
-    0 0 10px rgba(255,77,77,0.8),
-    0 0 30px rgba(255,77,77,0.6);
-}
-
-/* Slam animation */
-#stamp.show {
-  animation: stampSlam 0.35s ease-out forwards;
-}
-
-@keyframes stampSlam {
-  0% {
-    transform: translate(-50%, -50%) rotate(-18deg) scale(2.2);
-    opacity: 0;
+  .team-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 14px;
   }
-  60% {
-    transform: translate(-50%, -50%) rotate(-18deg) scale(0.9);
-    opacity: 1;
+
+  .player-count {
+    color: #00ff88;
+    font-weight: bold;
   }
-  100% {
-    transform: translate(-50%, -50%) rotate(-18deg) scale(1);
-    opacity: 1;
+
+  /* ================= CLICK SAFETY RESET ================= */
+
+  /* Any full-screen overlay MUST not block clicks unless visible */
+  #roundCompleteScreen,
+  #revealScreen {
+    pointer-events: none;
   }
-}
 
-/* Screen shake effect */
-@keyframes screenShake {
-  0% { transform: translate(0); }
-  25% { transform: translate(-6px, 4px); }
-  50% { transform: translate(6px, -4px); }
-  75% { transform: translate(-4px, -6px); }
-  100% { transform: translate(0); }
-}
-
-.shake {
-  animation: screenShake 0.3s;
-}
-
-/* ================= CARD DEPTH EFFECT ================= */
-
-#playerCard {
-  animation: cardPop 0.5s ease forwards;
-}
-
-@keyframes cardPop {
-  0% {
-    transform: scale(0.94);
-    box-shadow: 0 0 0 rgba(0,0,0,0);
-    opacity: 0;
+  /* Re-enable clicks ONLY when explicitly shown */
+  #revealScreen[style*="display: flex"],
+  #roundCompleteScreen[style*="display: flex"] {
+    pointer-events: auto;
   }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.7);
-    opacity: 1;
+
+
+
+  /* ================= TEAM LOGOS ================= */
+  .team-identity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
-}
-/* ================= ROUND COMPLETE BANNER ================= */
 
-.round-complete {
-  font-size: 72px;
-  font-weight: 900;
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  font-family: "Impact", "Arial Black", sans-serif;
-  color: #ffcc00;
-  text-shadow:
-    0 0 15px rgba(255,204,0,0.8),
-    0 0 40px rgba(255,204,0,0.6);
-  animation: fadeIn 0.6s ease;
-}
-
-/* ================= ROUND COMPLETED OVERLAY ================= */
-
-#roundCompleteScreen {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.95);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 1200;
-  opacity: 0;
-}
-
-.round-complete-text {
-  font-size: 72px;
-  font-weight: 900;
-  letter-spacing: 8px;
-  text-transform: uppercase;
-  font-family: "Impact", "Arial Black", sans-serif;
-  color: #ffcc00;
-  text-shadow:
-    0 0 15px rgba(255,204,0,0.8),
-    0 0 40px rgba(255,204,0,0.6);
-}
-
-/* Fade helpers (safe to append even if they exist already) */
-.round-fade-in {
-  animation: roundFadeIn 0.8s ease forwards;
-}
-
-.round-fade-out {
-  animation: roundFadeOut 0.8s ease forwards;
-}
-
-@keyframes roundFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes roundFadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-#roundCompleteScreen {
-  pointer-events: none;
-}
-
-/* ================= EXISTING CSS (UNCHANGED ABOVE) ================= */
-/* (everything you pasted remains exactly the same) */
-
-
-/* ================================================================= */
-/* ================= PLAYER DISPLAY (CARD / NAME) ================== */
-/* ================================================================= */
-
-#playerDisplay {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-#playerNameFallback {
-  display: none;
-  margin-top: 20px;
-  padding: 24px 50px;
-  font-size: 56px;
-  font-weight: 900;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  font-family: "Impact", "Arial Black", sans-serif;
-  color: #ffcc00;
-
-  background: rgba(0,0,0,0.75);
-  border: 3px solid #ffcc00;
-  border-radius: 14px;
-
-  box-shadow:
-    0 0 25px rgba(255,204,0,0.7),
-    inset 0 0 15px rgba(255,204,0,0.4);
-
-  animation: popIn 0.5s ease forwards;
-}
-
-
-/* ================================================================= */
-/* ================= TEAM SIDEBAR ================= */
-/* ================================================================= */
-
-#teamSidebar {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-
-  width: 260px;
-  background: rgba(0,0,0,0.7);
-  border: 2px solid #ffcc00;
-  border-radius: 16px;
-  padding: 18px;
-
-  box-shadow: 0 0 30px rgba(255,204,0,0.4);
-}
-
-#teamSidebar h2 {
-  margin-bottom: 16px;
-  font-size: 24px;
-  letter-spacing: 3px;
-  color: #ffcc00;
-}
-
-.team {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  padding: 10px 12px;
-  margin-bottom: 8px;
-
-  background: rgba(255,255,255,0.05);
-  border-radius: 10px;
-
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.team-name {
-  color: #ffd700;
-}
-
-.team-budget {
-  color: #00ff88;
-}
-
-.team-count {
-  color: #ffcc00;
-}
-
-
-/* ================================================================= */
-/* ================= BIDDING CONTROLS ================= */
-/* ================================================================= */
-
-#bidControls {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  margin-top: 30px;
-}
-
-#currentBid {
-  min-width: 120px;
-  padding: 16px 24px;
-
-  font-size: 36px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: #ffcc00;
-
-  background: rgba(0,0,0,0.7);
-  border: 2px solid #ffcc00;
-  border-radius: 14px;
-
-  box-shadow:
-    0 0 20px rgba(255,204,0,0.6),
-    inset 0 0 12px rgba(255,204,0,0.4);
-}
-
-
-/* ================================================================= */
-/* ================= REVEAL SCREEN LAYOUT FIX ================= */
-/* ================================================================= */
-
-#revealScreen {
-  padding-top: 40px;
-}
-
-/* ================================================================= */
-/* ================= REVEAL CENTER LAYOUT ================= */
-/* ================================================================= */
-
-.reveal-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-}
-
-/* ================================================================= */
-/* ================= AUCTION CONTROLS (PRICE & BUTTONS) ================= */
-/* ================================================================= */
-
-#auctionControls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-  margin-top: 20px;
-}
-
-#minusBtn,
-#plusBtn {
-  width: 80px;
-  height: 80px;
-  font-size: 36px;
-  font-weight: 900;
-  border: 1px solid rgba(167, 139, 250, 0.4);
-  border-radius: 50%;
-  background: rgba(26, 26, 26, 0.9);
-  color: #A78BFA;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 
-    0 4px 15px rgba(0, 0, 0, 0.5),
-    inset 0 0 10px rgba(167, 139, 250, 0.1);
-}
-
-#minusBtn:hover,
-#plusBtn:hover {
-  background: linear-gradient(135deg, #7C3AED, #6B46C1);
-  color: #FFFFFF;
-  transform: scale(1.1);
-  border-color: #A78BFA;
-  box-shadow: 
-    0 6px 25px rgba(124, 58, 237, 0.4),
-    inset 0 0 15px rgba(167, 139, 250, 0.2);
-}
-
-#currentPrice {
-  font-size: 48px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: #A78BFA;
-  min-width: 200px;
-  text-align: center;
-  padding: 20px 30px;
-  background: rgba(26, 26, 26, 0.9);
-  border: 1px solid rgba(167, 139, 250, 0.4);
-  border-radius: 12px;
-  box-shadow: 
-    0 4px 20px rgba(0, 0, 0, 0.6),
-    inset 0 0 20px rgba(167, 139, 250, 0.1);
-  text-shadow: 0 2px 10px rgba(167, 139, 250, 0.4);
-}
-
-
-/* ================================================================= */
-/* ================= SOLD / UNSOLD BUTTON GROUP ================= */
-/* ================================================================= */
-
-#decisionButtons {
-  position: fixed;
-  left: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  margin-top: 0;
-  z-index: 1100;
-}
-
-#decisionButtons .btn {
-  padding: 18px 64px;
-  font-size: 20px;
-  border-radius: 32px;
-}
-
-/* remove old offset; fixed positioning handles visibility */
-
-#decisionButtons .btn {
-  min-width: 210px;
-}
-
-#resultMessage {
-  margin-top: 10px;
-  max-width: 760px;
-  padding: 14px 18px;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.65);
-  border: 1px solid rgba(167, 139, 250, 0.35);
-  color: #E5E7EB;
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  text-align: center;
-  min-height: 24px; /* keeps space even when empty */
-}
-
-
-/* ================================================================= */
-/* ================= SAFETY: HIDE VIDEO COMPLETELY ================= */
-/* ================================================================= */
-
-#playerVideo {
-  display: none !important;
-}
-
-
-/* ================================================================= */
-/* ================= ROUND COMPLETED OVERLAY FIX ================= */
-/* ================================================================= */
-
-#roundCompleteScreen {
-  display: none;
-  opacity: 0;
-}
-
-.round-complete-text {
-  animation: popIn 0.6s ease forwards;
-}
-/* ===== TEAM SIDEBAR ===== */
-#teamSidebar {
-  position: absolute;
-  right: 40px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-.team {
-  padding: 12px 18px;
-  border: 2px solid #ffcc00;
-  cursor: pointer;
-  background: rgba(0,0,0,0.6);
-  border-radius: 10px;
-  transition: all 0.3s ease;
-}
-
-.team:hover {
-  background: rgba(255, 204, 0, 0.2);
-  transform: scale(1.02);
-}
-
-.team.active {
-  background: #ffcc00 !important;
-  color: #000 !important;
-  font-weight: 900;
-  box-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
-}
-
-.team.active * {
-  color: #000 !important;
-}
-
-.team.active .team-name,
-.team.active .team-header,
-.team.active .team-info,
-.team.active .team-info div,
-.team.active .player-count,
-.team.active .budget {
-  color: #000 !important;
-}
-
-.team-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.team-name {
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  flex: 1;
-}
-
-.edit-icon {
-  font-size: 14px;
-  cursor: pointer;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-
-.edit-icon:hover {
-  opacity: 1;
-}
-
-.team-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 14px;
-}
-
-.player-count {
-  color: #00ff88;
-  font-weight: bold;
-}
-
-/* ===== ROUND COMPLETE ===== */
-#roundCompleteScreen {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.95);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.round-complete-text {
-  font-size: 72px;
-  font-weight: 900;
-  color: #ffcc00;
-}
-#finalScreen {
-  display: none;
-  min-height: 100vh;
-  padding: 40px;
-
-  /* ✅ BACKGROUND IMAGE */
-  background: url("assets/kurrah.jpeg") center / cover no-repeat;
-
-  /* overlay dark layer effect */
-  position: relative;
-  opacity: 0;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-#finalScreen::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  z-index: 0;
-  pointer-events: none; /* ✅ THIS FIXES EVERYTHING */
-}
-
-
-#finalScreen * {
-  position: relative;
-  z-index: 1;
-}
-/* ================= CLICK SAFETY RESET ================= */
-
-/* Any full-screen overlay MUST not block clicks unless visible */
-#roundCompleteScreen,
-#finalScreen,
-#revealScreen {
-  pointer-events: none;
-}
-
-/* Re-enable clicks ONLY when explicitly shown */
-#revealScreen[style*="display: flex"],
-#finalScreen[style*="display: block"],
-#finalScreen[style*="display: flex"],
-#roundCompleteScreen[style*="display: flex"] {
-  pointer-events: auto;
-}
-
-
+  .team-logo-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(167, 139, 250, 0.5);
+    background: #000;
+  }
+
+  .team-identity-large {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .team-logo-large {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #A78BFA;
+    background: #000;
+  }
+
+  .team-logo-header {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
+    margin-right: 15px;
+    border: 3px solid #A78BFA;
+    background: #000;
+  }
+
+  /* ================= RESULT MESSAGE LOGO ================= */
+  .result-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .result-team-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: inherit;
+    /* inherit color from parent (green/red) */
+    background: rgba(0, 0, 0, 0.3);
+    padding: 5px 15px;
+    border-radius: 20px;
+  }
+
+  .result-team-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid currentColor;
+  }
+
+  /* ================= NAV BUTTONS ================= */
+  .secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFF;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
